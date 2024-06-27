@@ -4,12 +4,11 @@
 HopGoblin::HopGoblin()
 : Monster("Hop", 50000, 30)
 {
-	_aggroSystem = new AggroSystem();
+	_aggroSystem = make_shared<AggroSystem>();
 }
 
 HopGoblin::~HopGoblin()
 {
-	delete _aggroSystem;
 }
 
 void HopGoblin::Attack_Hop()
