@@ -12,7 +12,7 @@ public:
 	bool End();
 
 private:
-	Creature* _player1;
-	Creature* _player2;
+	shared_ptr<Creature> _player1;
+	shared_ptr<Creature> _player2;
 };
 

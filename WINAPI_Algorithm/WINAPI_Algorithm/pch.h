@@ -31,6 +31,8 @@ using namespace std;
 // Scene
 #include "Scene/Scene.h"
 #include "Scene/PaintScene.h"
+#include "Scene/CollisionScene.h"
+#include "Scene/LineScene.h"
 
 
 extern Vector2 mousePos;

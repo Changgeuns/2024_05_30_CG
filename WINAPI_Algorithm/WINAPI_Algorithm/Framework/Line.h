@@ -1,5 +1,5 @@
 #pragma once
-class Line
+class Line 
 {
 public:
 	Line(Vector2 start, Vector2 end);
@@ -8,7 +8,7 @@ public:
 	void Update();
 	void Render(HDC hdc);
 
-
+public:
 	Vector2 _start;
 	Vector2 _end;
 private:

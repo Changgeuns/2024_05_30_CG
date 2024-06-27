@@ -23,8 +23,8 @@ private:
 	void SelectPlayer(int num, string name, Creature** creature);
 	void Input();
 
-	Creature* _player;
-	Creature* _computer;
-	vector<Creature*> _monsters;
+	shared_ptr<Creature> _player;
+	shared_ptr<Creature> _computer;
+	vector<shared_ptr<Creature>> _monsters;
 };
 

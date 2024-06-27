@@ -8,13 +8,11 @@ World_1::World_1()
 	CreatePlayer();
 
 	// player2 생성
-	_player2 = new Knight("player2", 100, 5);
+	_player2 = make_shared<Knight>("player2", 100, 5);
 }
 
 World_1::~World_1()
 {
-	delete _player1;
-	delete _player2;
 }
 
 void World_1::CreatePlayer()
@@ -27,10 +25,10 @@ void World_1::CreatePlayer()
 	switch (input)
 	{
 	case 1:
-		_player1 = new Knight(name, 5000, 30);
+		_player1 = make_shared<Knight>(name, 5000, 30);
 		break;
 	case 2:
-		_player1 = new Archer(name , 1000, 60);
+		_player1 = make_shared<Archer>(name , 1000, 60);
 		break;
 	default:
 		break;

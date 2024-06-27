@@ -65,6 +65,8 @@ bool RectCollider::IsCollision(shared_ptr<RectCollider> other)
 	}
 
 	return false;
+
+
 }
 
 

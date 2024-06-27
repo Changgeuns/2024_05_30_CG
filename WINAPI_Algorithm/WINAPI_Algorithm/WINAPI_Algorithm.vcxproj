@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Scene\LineScene.h" />
     <ClInclude Include="Scene\CollisionScene.h" />
     <ClInclude Include="Framework\Circle.h" />
     <ClInclude Include="Framework\Rect.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="WINAPI_Algorithm.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Scene\LineScene.cpp" />
     <ClCompile Include="Scene\CollisionScene.cpp" />
     <ClCompile Include="Framework\Circle.cpp" />
     <ClCompile Include="Framework\Rect.cpp" />
