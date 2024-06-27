@@ -147,8 +147,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Scene\CollisionScene.h" />
     <ClInclude Include="Framework\Circle.h" />
     <ClInclude Include="Framework\Rect.h" />
+    <ClInclude Include="Framework\Line.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\PaintScene.h" />
     <ClInclude Include="pch.h" />
@@ -156,11 +158,14 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Framework\Vector2.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="WINAPI_Algorithm.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Scene\CollisionScene.cpp" />
     <ClCompile Include="Framework\Circle.cpp" />
     <ClCompile Include="Framework\Rect.cpp" />
+    <ClCompile Include="Framework\Line.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\PaintScene.cpp" />
     <ClCompile Include="pch.cpp">

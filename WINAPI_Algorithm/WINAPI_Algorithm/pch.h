@@ -17,10 +17,13 @@
 
 using namespace std;
 
+#include "Types.h"
+
 //FrameWork
 #include "Framework/Vector2.h"
 #include "Framework/Rect.h"
 #include "Framework/Circle.h"
+#include "Framework/Line.h"
 
 // Program
 #include "Program/Program.h"
@@ -28,3 +31,6 @@ using namespace std;
 // Scene
 #include "Scene/Scene.h"
 #include "Scene/PaintScene.h"
+
+
+extern Vector2 mousePos;

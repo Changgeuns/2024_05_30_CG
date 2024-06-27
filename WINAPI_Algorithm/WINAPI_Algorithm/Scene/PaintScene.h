@@ -12,8 +12,12 @@ public:
 
 
 private:
-	shared_ptr<Rect> _rect;
-	shared_ptr<Circle> _circle;
+	vector<HBRUSH> _brushes;
+	vector<HPEN> _pens;
 
+
+	shared_ptr<RectCollider> _rect;
+	shared_ptr<CircleCollider> _circle;
+	//shared_ptr<Line> _line;
 };
 
