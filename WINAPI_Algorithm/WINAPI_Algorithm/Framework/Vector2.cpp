@@ -68,3 +68,13 @@ Vector2 Vector2::NormalVector2()
     벡터가 영벡터(0, 0)인 경우, 나누기를 할 필요 없이 영벡터를 반환합니다.
     */
 }
+
+bool Vector2::IsBetween(Vector2 v1, Vector2 v2)
+{
+    float Cross1 = this->Cross(v1);
+    float Cross2 = this->Cross(v2);
+
+    bool result = (Cross1 * Cross2) < 0;
+
+    return result;
+}

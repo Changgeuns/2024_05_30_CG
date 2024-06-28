@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Rect.h"
+#include "RectCollider.h"
 
 
 RectCollider::RectCollider(Vector2 center, Vector2 halfSize)

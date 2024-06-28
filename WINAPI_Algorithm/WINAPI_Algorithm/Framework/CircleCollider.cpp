@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Circle.h"
+#include "CircleCollider.h"
 
 
 
@@ -55,7 +55,7 @@ bool CircleCollider::IsCollision(shared_ptr<RectCollider> other)
 	// 과제
 	// AABB(회전하지 않는다는 조건), OBB(회전이 가능하다)
 
-	float left = other->Left() - _radius;
+	/*float left = other->Left() - _radius;
 	float right = other->Right() + _radius;
 	float top = other->Top() - _radius;
 	float bottom = other->Bottom() + _radius;
@@ -64,8 +64,41 @@ bool CircleCollider::IsCollision(shared_ptr<RectCollider> other)
 		_center._y > top && _center._y < bottom)
 	{
 		return true;
-	}
+	}*/
 
+	Vector2 circleCenter = _center;
+	float radius = _radius;
+
+	Vector2 rectCenter = other->_center;
+	Vector2 rectHalfSize = other->_halfSize;
+	// 위아래충돌 체크
+	if (circleCenter._x < other->Right() && circleCenter._x > other->Left())
+	{
+		Vector2 newHalfSize = Vector2(rectHalfSize._x, rectHalfSize._y + radius);
+		RectCollider newRect = RectCollider(other->_center, newHalfSize);
+
+		if (newRect.IsCollision(circleCenter))
+			return true;
+	}
+	// 좌우 충돌 체크
+	else if (circleCenter._y < other->Bottom() && circleCenter._y > other->Top())
+	{
+		Vector2 newHalfSize = Vector2(rectHalfSize._x + radius, rectHalfSize._y);
+		RectCollider newRect = RectCollider(other->_center, newHalfSize);
+
+		if (newRect.IsCollision(circleCenter))
+			return true;
+	}
+	//
+	else 
+	{
+		bool check1 = IsCollision(Vector2(other->Left(), other->Top()));
+		bool check2 = IsCollision(Vector2(other->Left(), other->Bottom()));
+		bool check3 = IsCollision(Vector2(other->Right(), other->Top()));
+		bool check4 = IsCollision(Vector2(other->Right(), other->Bottom()));
+
+		return check1 || check2 || check3 || check4;
+	}
 
 	return false;
 }
