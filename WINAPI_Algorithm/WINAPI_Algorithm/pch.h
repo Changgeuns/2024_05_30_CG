@@ -19,20 +19,18 @@ using namespace std;
 
 #include "Types.h"
 
-//FrameWork
+// FrameWork
 #include "Framework/Vector2.h"
+#include "Framework/Line.h"
+#include "Framework/Collider.h"
 #include "Framework/RectCollider.h"
 #include "Framework/CircleCollider.h"
-#include "Framework/Line.h"
 
 // Program
 #include "Program/Program.h"
 
 // Scene
 #include "Scene/Scene.h"
-//#include "Scene/PaintScene.h"
-//#include "Scene/CollisionScene.h"
-//#include "Scene/LineScene.h"
-//#include "Scene/Line2Scene.h"
+#include "Scene/PaintScene.h"
 
 extern Vector2 mousePos;

@@ -8,7 +8,6 @@ public:
 	virtual void Update() abstract;
 	virtual void Render(HDC hdc) abstract;
 
-
 private:
 
 };

@@ -3,10 +3,10 @@
 
 LineScene::LineScene()
 {
-	_line1 = make_shared<Line>(Vector2(100, 500), Vector2(1000, 400));
-	_line2 = make_shared<Line>(Vector2(100, 450), Vector2(0, 0));
+	_line1 = make_shared<Line>(Vector2(100,500), Vector2(1000,400));
+	_line2 = make_shared<Line>(Vector2(100,450), Vector2(0,0));
 
-	_line3 = make_shared<Line>(Vector2(100, 470), Vector2(150, 470));
+	_line3 = make_shared<Line>(Vector2(100,470), Vector2(150,470));
 }
 
 LineScene::~LineScene()
@@ -15,22 +15,16 @@ LineScene::~LineScene()
 
 void LineScene::Update()
 {
-	
 	_line2->_end = mousePos;
-
-	// ÀÌºÎºÐ ¶óÀÎ 1À»±×¸²ÀÚ »ï¾Æ¼­ ¶óÀÎ 1°ú ÆòÇà ÇÏ¸ç ´Ã¾î³ª´Â
-	// ¶óÀÎ 3¸¦ ¸¸µé¾î¾ßÇÔ ±æÀÌ´Â ¶óÀÎ3¿Í ¶óÀÎ 1ÀÇ À§¿¡¼­ ¶óÀÎ 1¿¡ ÆòÇàÀ¸·Î
-	// ³»¸®ÂØ´Â ÅÂ¾çÀÌ ÀÖ´Ù°í °¡Á¤ÇÏ°í ±× ±×¸²ÀÚ ¸¸Å­ ¶óÀÎ 3ÀÌ ´Ã¾î³ª¾ßÇÔ
 
 	Vector2 a = (_line2->_end - _line2->_start); // A
 	Vector2 b = (_line1->_end - _line1->_start); // B
 
-	Vector2 bNormal = b.NormalVector2(); //B ÀÇ ´ÜÀ§º¤ÅÍ
+	Vector2 bNormal = b.NormalVector2(); // Bì˜ ë‹¨ìœ„ë²¡í„°
 
-	float line2Length = a.Dot(bNormal); // ±×¸²ÀÚÀÇ ±æÀÌ.. Åõ¿µ‰çÀ» ¶§ ±æÀÌ
+	float line2Length = a.Dot(bNormal); // ê·¸ë¦¼ìžì˜ ê¸¸ì´... íˆ¬ì˜ë¬ì„ ë•Œ ê¸¸ì´
 
 	Vector2 line3Delta = bNormal * line2Length;
-
 	_line3->_end = _line3->_start + line3Delta;
 
 	_line1->Update();

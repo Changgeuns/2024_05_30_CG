@@ -12,7 +12,6 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
 Vector2 mousePos;
-
 shared_ptr<Program> program;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
@@ -107,8 +106,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    // 연출감독
    // 배우
    // ...
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindowW(
+   szWindowClass,
+   szTitle
+   , WS_OVERLAPPEDWINDOW,
+     0, 0, WIN_WIDTH, WIN_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {

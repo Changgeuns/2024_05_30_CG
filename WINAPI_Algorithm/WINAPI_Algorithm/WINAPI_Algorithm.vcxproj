@@ -147,13 +147,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Objects\Bullet.h" />
+    <ClInclude Include="Objects\Barrel.h" />
+    <ClInclude Include="Objects\Cannon.h" />
+    <ClInclude Include="Scene\CannonScene.h" />
     <ClInclude Include="Framework\Collider.h" />
+    <ClInclude Include="Framework\Line.h" />
     <ClInclude Include="Scene\Line2Scene.h" />
     <ClInclude Include="Scene\LineScene.h" />
     <ClInclude Include="Scene\CollisionScene.h" />
     <ClInclude Include="Framework\CircleCollider.h" />
     <ClInclude Include="Framework\RectCollider.h" />
-    <ClInclude Include="Framework\Line.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\PaintScene.h" />
     <ClInclude Include="pch.h" />
@@ -165,13 +169,17 @@
     <ClInclude Include="WINAPI_Algorithm.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\Bullet.cpp" />
+    <ClCompile Include="Objects\Barrel.cpp" />
+    <ClCompile Include="Objects\Cannon.cpp" />
+    <ClCompile Include="Scene\CannonScene.cpp" />
     <ClCompile Include="Framework\Collider.cpp" />
+    <ClCompile Include="Framework\Line.cpp" />
     <ClCompile Include="Scene\Line2Scene.cpp" />
     <ClCompile Include="Scene\LineScene.cpp" />
     <ClCompile Include="Scene\CollisionScene.cpp" />
     <ClCompile Include="Framework\CircleCollider.cpp" />
     <ClCompile Include="Framework\RectCollider.cpp" />
-    <ClCompile Include="Framework\Line.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\PaintScene.cpp" />
     <ClCompile Include="pch.cpp">

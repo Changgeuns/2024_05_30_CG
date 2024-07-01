@@ -1,4 +1,5 @@
 #pragma once
+
 class Vector2
 {
 public:
@@ -50,6 +51,22 @@ public:
 		return (*this);
 	}
 
+	Vector2& operator+=(const Vector2& other)
+	{
+		this->_x += other._x;
+		this->_y += other._y;
+
+		return (*this);
+	}
+
+	Vector2& operator-=(const Vector2& other)
+	{
+		this->_x -= other._x;
+		this->_y -= other._y;
+
+		return (*this);
+	}
+
 	Vector2 operator++(int)
 	{
 		Vector2 result = *this;
@@ -78,8 +95,8 @@ public:
 	}
 
 	float Length() const;
-
 	float Distance(Vector2 other) const;
+	float Angle() const;
 
 	void Normalize();
 
@@ -90,4 +107,3 @@ public:
 	float _x;
 	float _y;
 };
-
