@@ -18,6 +18,7 @@ public:
 	vector<shared_ptr<class Bullet>>& GetBullets() { return _bullets; }
 
 	int& Gethp() { return _curHP; }
+	void deedmove() { _body->_center._x += 10000; }
 private:
 	shared_ptr<Collider> _body;
 	shared_ptr<class Barrel> _barrel;

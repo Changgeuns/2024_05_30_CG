@@ -102,9 +102,10 @@ void Bullet::Attack_Cannon(shared_ptr<Cannon> cannon)
 		else if (cannon->Gethp() == 3) cannon->GetCollider()->SetYELLOW();
 		else if (cannon->Gethp() == 2) cannon->GetCollider()->SetORANGE();
 		else if (cannon->Gethp() == 1) cannon->GetCollider()->SetRed();
-		else if (cannon->Gethp() == 0)
+		else if (cannon->Gethp() <= 0)
 		{
-
+			cannon->deedmove(); // 체력이 0이하라면 안보이는곳으로 이동
+			return;
 		}
 	}
 

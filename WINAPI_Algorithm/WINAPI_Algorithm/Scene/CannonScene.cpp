@@ -32,8 +32,8 @@ void CannonScene::Update()
 	_cannon1->Update();
 	_cannon2->Update();
 
-	TurnChange();
-
+	if (!deedCheck(_cannon1, _cannon2)) TurnChange(); 
+	
 	// Attack1
 	for (auto bullet : _cannon1->GetBullets())
 	{
@@ -73,3 +73,24 @@ void CannonScene::TurnChange()
 	}
 
 }
+
+bool CannonScene::deedCheck(shared_ptr<Cannon> a, shared_ptr<Cannon> b)
+{
+	if (a->Gethp() <= 0)// 둘중하나가 죽으면 리턴값은 트루반환후 반대편 캐논이 컨트롤
+	{ // 주도권을 게속 가져감
+		b->isControlled = true;
+		a->isControlled = false;
+
+		return true;
+	}
+	if (b->Gethp() <= 0)
+	{
+		b->isControlled = false;
+		a->isControlled = true;
+
+		return true;
+	}
+
+	return false;
+}
+
