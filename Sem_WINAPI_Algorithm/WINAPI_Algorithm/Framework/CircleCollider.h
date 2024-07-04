@@ -1,4 +1,8 @@
 #pragma once
+
+#define GREEN_COLOR		0
+#define RED_COLOR		1
+
 class CircleCollider : public Collider
 {
 public:

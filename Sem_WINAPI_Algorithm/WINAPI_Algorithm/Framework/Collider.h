@@ -2,9 +2,6 @@
 
 #define GREEN_COLOR		0
 #define RED_COLOR		1
-#define BLUE_COLOR		2
-#define ORANGE_COLOR		3
-#define YELLOW_COLOR		4
 
 class RectCollider;
 class CircleCollider;
@@ -33,11 +30,8 @@ public:
 	virtual bool IsCollision(shared_ptr<CircleCollider> other) abstract;
 	virtual bool IsCollision(shared_ptr<RectCollider> other) abstract;
 
- 	 virtual void SetRed() { SetColor(RED_COLOR); }
-	 virtual void SetORANGE() { SetColor(ORANGE_COLOR); }
-	 virtual void SetYELLOW() { SetColor(YELLOW_COLOR); }
-	 virtual void SetGreen() { SetColor(GREEN_COLOR); }
-	 virtual void SetBLUE() { SetColor(BLUE_COLOR); }
+	virtual void SetGreen() { SetColor(GREEN_COLOR); }
+	virtual void SetRed() { SetColor(RED_COLOR); }
 
 	Vector2 _center;
 

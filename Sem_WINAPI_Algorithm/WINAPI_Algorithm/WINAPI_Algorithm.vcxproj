@@ -147,11 +147,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Objects\Alka\AlkaMap.h" />
-    <ClInclude Include="Objects\Alka\AlkaRect.h" />
-    <ClInclude Include="Objects\Alka\AlkaBall.h" />
-    <ClInclude Include="Objects\Alka\AlkaPlayer.h" />
-    <ClInclude Include="Scene\AlkaScene.h" />
     <ClInclude Include="Objects\Maze\Maze.h" />
     <ClInclude Include="Objects\Maze\Block.h" />
     <ClInclude Include="Objects\Maze\Player.h" />
@@ -178,11 +173,6 @@
     <ClInclude Include="WINAPI_Algorithm.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Objects\Alka\AlkaMap.cpp" />
-    <ClCompile Include="Objects\Alka\AlkaRect.cpp" />
-    <ClCompile Include="Objects\Alka\AlkaBall.cpp" />
-    <ClCompile Include="Objects\Alka\AlkaPlayer.cpp" />
-    <ClCompile Include="Scene\AlkaScene.cpp" />
     <ClCompile Include="Objects\Maze\Maze.cpp" />
     <ClCompile Include="Objects\Maze\Block.cpp" />
     <ClCompile Include="Objects\Maze\Player.cpp" />
