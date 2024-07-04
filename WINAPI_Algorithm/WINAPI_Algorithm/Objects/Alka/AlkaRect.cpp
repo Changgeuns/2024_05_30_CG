@@ -2,50 +2,31 @@
 #include "AlkaRect.h"
 
 AlkaRect::AlkaRect()
+	: RectCollider(Vector2(), Vector2(10, 20))
 {
-	//Vector2 offSet = Vector2(500, 200);
+	_brushes.push_back(CreateSolidBrush(GREEN));
+	_brushes.push_back(CreateSolidBrush(RED));
+	_brushes.push_back(CreateSolidBrush(BLUE));
 
-	_rect.reserve(MAXCOUNT_Y);
+	// _pens[0] ... Green
+	// _pens[1] ... Red
+	_pens.push_back(CreatePen(PS_SOLID, 3, BLUE));
 
-	for (int i = 0; i < MAXCOUNT_Y; i++)
-	{
-		vector<shared_ptr<Collider>> rect_X;
-		rect_X.reserve(MAXCOUNT_X);
-
-		for (int j = 0; j < MAXCOUNT_X; j++)
-		{
-			Vector2 rectOffset = Vector2(16.0f * j, 16.0f * i);
-
-			shared_ptr<Collider> rect = make_shared<RectCollider>();
-			rect_X.push_back(rect);
-		}
-
-		_rect.push_back(rect_X);
-	}
 }
 
 AlkaRect::~AlkaRect()
 {
+	for (auto brush : _brushes)
+		DeleteObject(brush);
 }
 
 void AlkaRect::Update()
 {
-	for (auto rect_X : _rect)
-	{
-		for (auto rect : rect_X)
-		{
-			rect->Update();
-		}
-	}
+	RectCollider::Update();
 }
 
 void AlkaRect::Render(HDC hdc)
 {
-	for (auto rect_X : _rect)
-	{
-		for (auto rect : rect_X)
-		{
-			rect->Render(hdc);
-		}
-	}
+	SelectObject(hdc, _brushes[static_cast<int>(_type)]);
+	RectCollider::Render(hdc);
 }
