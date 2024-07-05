@@ -2,7 +2,7 @@
 #include "AlkaRect.h"
 
 AlkaRect::AlkaRect()
-	: RectCollider(Vector2(), Vector2(10, 20))
+	: RectCollider(Vector2(), Vector2(50, 20))
 {
 	_brushes.push_back(CreateSolidBrush(GREEN));
 	_brushes.push_back(CreateSolidBrush(RED));
@@ -12,6 +12,7 @@ AlkaRect::AlkaRect()
 	// _pens[1] ... Red
 	_pens.push_back(CreatePen(PS_SOLID, 3, BLUE));
 
+	SetORANGE();
 }
 
 AlkaRect::~AlkaRect()
@@ -30,3 +31,14 @@ void AlkaRect::Render(HDC hdc)
 	SelectObject(hdc, _brushes[static_cast<int>(_type)]);
 	RectCollider::Render(hdc);
 }
+
+void AlkaRect::SetPosition(Vector2 pos)
+{
+	_center = pos;
+}
+
+void AlkaRect::DeedMove()
+{
+	_center._x += 10000;
+}
+

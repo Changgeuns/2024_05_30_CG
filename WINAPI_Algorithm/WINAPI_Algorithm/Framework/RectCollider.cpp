@@ -43,6 +43,7 @@ bool RectCollider::IsCollision(Vector2 point)
 bool RectCollider::IsCollision(shared_ptr<CircleCollider> other)
 {
 	return other->IsCollision(shared_from_this());
+	
 }
 
 bool RectCollider::IsCollision(shared_ptr<RectCollider> other)

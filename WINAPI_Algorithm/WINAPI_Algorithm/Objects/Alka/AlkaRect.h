@@ -18,9 +18,14 @@ public:
 	void Update();
 	void Render(HDC hdc);
 
+	void SetPosition(Vector2 pos);
+
+	void DeedMove();
+
 
 private:
 	RectType _type = RectType::ALIVE;
+	bool _deed = false;
 
 	vector<HBRUSH> _brushes;
 };

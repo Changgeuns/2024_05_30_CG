@@ -3,13 +3,9 @@
 
 AlkaBall::AlkaBall()
 {
-	_ball = make_shared<CircleCollider>(CENTER, 10);
+	_circle = make_shared<CircleCollider>(Vector2(-1000,0), 10);
 }
 
-AlkaBall::AlkaBall(Vector2 pos)
-{
-	_ball = make_shared<CircleCollider>(pos, 10);
-}
 
 AlkaBall::~AlkaBall()
 {
@@ -17,46 +13,38 @@ AlkaBall::~AlkaBall()
 
 void AlkaBall::Update()
 {
-	if (_isActive == false) return;
+	Move();
 
-	OutControll();
-
-	_ball->_center -= _direction * _speed;
-	_ball->Update();
+	_circle->Update();
 	
+	BallOut();
 }
 
 void AlkaBall::Render(HDC hdc)
 {
-
-	_ball->Render(hdc);
+	_circle->Render(hdc);
 }
 
-void AlkaBall::FirstBallShot(Vector2 startPos, Vector2 direction)
+void AlkaBall::Move()
 {
-	_isActive = true;
-	_ball->_center = startPos;
-	_direction = direction;
-	_direction.Normalize();
-	_downVector = Vector2();
+	_circle->_center += _direction * _speed;
 }
 
-void AlkaBall::OutControll()
+void AlkaBall::BallOut()
 {
-	Vector2 center = _ball->_center;
-	if (center._x > WIN_WIDTH || center._x < 0)
+	if (_circle->_center._x < leftTop._x || _circle->_center._x > rightBottom._x)
 	{
-		_direction._x *= -1.0f;
+		_direction._x *= -1;
 	}
-	if (center._y > WIN_HEIGHT || center._y < 0)
+	if (_circle->_center._y < leftTop._y)// || _circle->_center._y > rightBottom._y)
 	{
-		_direction._y *= -1.0f;
+		_direction._y *= -1;
+	}
+	if (_circle->_center._y > rightBottom._y)
+	{
+		_ballout = true;
 	}
 }
 
-void AlkaBall::RectControll(shared_ptr<Collider> rect)
-{
-    
-}
 
 
