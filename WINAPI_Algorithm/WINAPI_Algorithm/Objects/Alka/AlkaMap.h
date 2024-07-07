@@ -1,4 +1,7 @@
 #pragma once
+class AlkaRect;
+class AlkaBall;
+
 class AlkaMap
 {
 public:
@@ -8,14 +11,11 @@ public:
 	void Update();
 	void Render(HDC hdc);
 
-	void IsCollision(shared_ptr<class AlkaBall> ball);
+	void IsCollision(shared_ptr<AlkaBall> ball);
 
-
-	void IsCollisionUpDwon(shared_ptr<class AlkaBall> ball);
-	void IsCollisionRightLeft(shared_ptr<class AlkaBall> ball);
 
 private:
-	vector<vector<shared_ptr<class AlkaRect>>> _rect;
+	vector<vector<shared_ptr<AlkaRect>>> _rect;
 
 };
 

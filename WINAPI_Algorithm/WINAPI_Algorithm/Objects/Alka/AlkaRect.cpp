@@ -2,7 +2,7 @@
 #include "AlkaRect.h"
 
 AlkaRect::AlkaRect()
-	: RectCollider(Vector2(), Vector2(50, 20))
+	: RectCollider(Vector2(), Vector2(30, 10))
 {
 	_brushes.push_back(CreateSolidBrush(GREEN));
 	_brushes.push_back(CreateSolidBrush(RED));

@@ -9,6 +9,7 @@ public:
 	void Render(HDC hdc);
 
 	void SetPosition(Vector2 pos) { _circle->_center = pos; }
+	Vector2 GetPosition() { return _circle->_center; }
 	void SetDirection(Vector2 direction) { _direction = direction; }
 	Vector2 GetDirection() { return _direction; }
 

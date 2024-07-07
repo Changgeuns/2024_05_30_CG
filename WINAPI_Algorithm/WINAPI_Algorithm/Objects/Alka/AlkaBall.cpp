@@ -3,7 +3,7 @@
 
 AlkaBall::AlkaBall()
 {
-	_circle = make_shared<CircleCollider>(Vector2(-1000,0), 10);
+	_circle = make_shared<CircleCollider>(Vector2(-1000,0), 8);
 }
 
 

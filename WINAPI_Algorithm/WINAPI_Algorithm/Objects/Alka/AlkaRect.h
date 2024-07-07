@@ -1,7 +1,7 @@
 #pragma once
 
-#define MAXCOUNT_X 10
-#define MAXCOUNT_Y 3
+#define MAXCOUNT_X 20
+#define MAXCOUNT_Y 10
 
 class AlkaRect : public RectCollider
 {
