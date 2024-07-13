@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stack.cpp">
+    <ClCompile Include="Stack.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Queue.cpp">
@@ -33,28 +33,26 @@
     <ClCompile Include="Tree.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Priorityqueue.cpp">
+    <ClCompile Include="PriorityQueue.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Djikstar.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BinarySearchTree.cpp">
+    <ClCompile Include="MST.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BSTMain.cpp">
+    <ClCompile Include="DisJointSet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DP(0).cpp">
+    <ClCompile Include="Babbling.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DP(1).cpp">
+    <ClCompile Include="QuickSort.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="BinarySearchTree.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
+    <ClCompile Include="MergeSort.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
