@@ -14,3 +14,20 @@ UPROPERTY( ? )
 
 ConstructorHelpers
  -  생성자에서 언리얼에디터에 존재(프로젝트 파일에 저장되어있는)하는 정보들을 읽어올 수 있게 도와준다.
+
+// 과제
+- ContructHelper::FindObject, FindClass 용도
+
+- Local 과 Local 이 안붙은 수학 함수들의 차이
+
+- 언리얼의 Cast
+
+- 언리얼 엑터의 수명 주기
+
+-Delegate
+--1. Delegate_myDelegate3.ExecuteIfBound(50,50)
+
+-- 2. 클래스 객체로 직접 함수 호출 auto myAninI = GetMesh()->GetAnimInstance();
+  Cast<UMyAnimInstance>(myAninI)->DelegateTest2(50, 30);
+   단점
+   - 클래스간의 결합도
