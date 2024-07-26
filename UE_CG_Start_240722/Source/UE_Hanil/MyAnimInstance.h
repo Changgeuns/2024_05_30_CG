@@ -24,6 +24,8 @@ public:
 	void DelegateTest();
 	void DelegateTest2(int32 hp, int32 mp);
 
+	void JumpToSection(int32 sectionIndex);
+
 	UFUNCTION()
 	void AnimNotify_AttackHit();
 

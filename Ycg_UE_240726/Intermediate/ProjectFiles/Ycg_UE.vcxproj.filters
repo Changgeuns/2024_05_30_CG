@@ -11,6 +11,7 @@
     <None Include="..\..\Source\Ycg_UEEditor.Target.cs">
       <Filter>Source</Filter>
     </None>
+    <None Include="..\..\.vsconfig" />
     <Filter Include="Config">
       <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
     </Filter>
@@ -29,6 +30,12 @@
     <Filter Include="Source\Ycg_UE">
       <UniqueIdentifier>{9B8CD475-B284-3C3C-94B0-7FB0441ED64F}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyActor.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyActor.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <None Include="..\..\Source\Ycg_UE\Ycg_UE.Build.cs">
       <Filter>Source\Ycg_UE</Filter>
     </None>

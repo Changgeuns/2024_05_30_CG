@@ -51,7 +51,7 @@ void AMyCharacter::BeginPlay()
 	auto animInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	// 몽타주가 끝날때 _isAttack 을 false로 만들어줬으면 좋겠다.
 	animInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::onAttackEnded);
-	//animInstance->_attackDelegate
+	animInstance->_attackDelegate.AddUObject(this, &AMyCharacter::AttackHit);
 }
 
 // Called every frame
@@ -139,6 +139,11 @@ void AMyCharacter::AttackA(const FInputActionValue& value)
 		auto myAniml = GetMesh()->GetAnimInstance();
 		Cast<UMyAnimInstance>(myAniml)->PlayAttackMontage();
 		_isAttcking = true;
+
+		_curAttackIndex %= 3;
+		_curAttackIndex++;
+
+		Cast< UMyAnimInstance>(myAniml)->JumpToSection(_curAttackIndex);
 	}
 }
 

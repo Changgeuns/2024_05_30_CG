@@ -53,6 +53,12 @@ void UMyAnimInstance::DelegateTest2(int32 hp, int32 mp)
 	UE_LOG(LogTemp, Warning, TEXT("hp : %d, mp : %d"), hp,mp);
 }
 
+void UMyAnimInstance::JumpToSection(int32 sectionIndex)
+{
+	FName sectionName = FName(*FString::Printf(TEXT("Attack%d"), sectionIndex));
+	Montage_JumpToSection(sectionName);
+}
+
 void UMyAnimInstance::AnimNotify_AttackHit()
 {
 	// 공격시점 
