@@ -104,6 +104,9 @@ void AMyCharacter::Move(const FInputActionValue& value)
 
 	if (Controller != nullptr)
 	{
+		_vertical = MovementVector.Y;
+		_Horizontal = MovementVector.X;
+
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
 	}
