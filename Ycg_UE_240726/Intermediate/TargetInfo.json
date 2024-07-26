@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "Ycg_UE",
+			"Path": "..\\Source\\Ycg_UE.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "Ycg_UEEditor",
+			"Path": "..\\Source\\Ycg_UEEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

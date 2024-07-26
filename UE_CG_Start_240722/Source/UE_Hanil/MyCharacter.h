@@ -80,7 +80,10 @@ public:
 		UAnimMontage* AttackAnimMontage;*/
 
 	// Camera
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* _springArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* _camera;
 
 
