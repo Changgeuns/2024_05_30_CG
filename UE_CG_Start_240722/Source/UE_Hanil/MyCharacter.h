@@ -40,11 +40,14 @@ public:
 	UFUNCTION()
 	void onAttackEnded(class UAnimMontage* Montage, bool bInterrupted);
 
+	UFUNCTION()
+	void AttackHit();
+
 protected:
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
 	void JumpA(const FInputActionValue& value);
-	void Attack(const FInputActionValue& value);
+	void AttackA(const FInputActionValue& value);
 	
 
 public:

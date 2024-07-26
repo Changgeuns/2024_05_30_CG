@@ -51,7 +51,7 @@ void AMyCharacter::BeginPlay()
 	auto animInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	// 몽타주가 끝날때 _isAttack 을 false로 만들어줬으면 좋겠다.
 	animInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::onAttackEnded);
-
+	//animInstance->_attackDelegate
 }
 
 // Called every frame
@@ -79,7 +79,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(_jumpAction, ETriggerEvent::Started, this, &AMyCharacter::JumpA);
 
 		// Attacks
-		EnhancedInputComponent->BindAction(_AttackAction, ETriggerEvent::Started, this, &AMyCharacter::Attack);
+		EnhancedInputComponent->BindAction(_AttackAction, ETriggerEvent::Started, this, &AMyCharacter::AttackA);
 
 
 	}
@@ -91,6 +91,12 @@ void AMyCharacter::onAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 	UE_LOG(LogTemp, Error, TEXT("Attack End!!"));
 	_isAttcking = false;
 }
+
+void AMyCharacter::AttackHit()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attack!!!"));
+}
+
 
 void AMyCharacter::Move(const FInputActionValue& value)
 {
@@ -124,7 +130,7 @@ void AMyCharacter::JumpA(const FInputActionValue& value)
 	}
 }
 
-void AMyCharacter::Attack(const FInputActionValue& value)
+void AMyCharacter::AttackA(const FInputActionValue& value)
 {
 	bool isPressed = value.Get<bool>();
 

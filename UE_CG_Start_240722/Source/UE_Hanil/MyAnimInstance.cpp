@@ -53,3 +53,10 @@ void UMyAnimInstance::DelegateTest2(int32 hp, int32 mp)
 	UE_LOG(LogTemp, Warning, TEXT("hp : %d, mp : %d"), hp,mp);
 }
 
+void UMyAnimInstance::AnimNotify_AttackHit()
+{
+	// 공격시점 
+	//
+	_attackDelegate.Broadcast();
+}
+
