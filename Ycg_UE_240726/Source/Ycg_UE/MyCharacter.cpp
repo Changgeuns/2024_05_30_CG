@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "MyAnimInstance.h"
+#include "Engine/DamageEvents.h" 
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -39,6 +40,8 @@ AMyCharacter::AMyCharacter()
 
 	_springArm->TargetArmLength = 500.0f;
 	_springArm->SetRelativeRotation(FRotator(-35.0f, 0.0f, 0.0f));
+
+	RootComponent = GetCapsuleComponent();
 }
 
 // Called when the game starts or when spawned
@@ -46,10 +49,17 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	auto animInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	Init();
+}
+
+void AMyCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	_animInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	// 몽타주가 끝날때 _isAttack 을 false로 만들어줬으면 좋겠다.
-	animInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::onAttackEnded);
-	animInstance->_attackDelegate.AddUObject(this, &AMyCharacter::AttackHit);
+	_animInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::onAttackEnded);
+	_animInstance->_attackDelegate.AddUObject(this, &AMyCharacter::AttackHit);
 }
 
 // Called every frame
@@ -82,6 +92,23 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
+float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	// TODO :
+	// 1. hp -= Damage
+	// 2. 공격자 이름 출력
+	_curHP -= Damage;
+
+	UE_LOG(LogTemp, Log, TEXT("Attack : %s, curHP : %d"), *DamageCauser->GetName(), _curHP);
+	
+	if (_curHP < 0)
+		_curHP = 0;
+
+
+	return _curHP;
+}
+
 void AMyCharacter::onAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	UE_LOG(LogTemp, Error, TEXT("Attack End!!"));
@@ -90,7 +117,46 @@ void AMyCharacter::onAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 
 void AMyCharacter::AttackHit()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack!!!"));
+	//UE_LOG(LogTemp, Warning, TEXT("Attack!!!"));
+
+	// TODO : 
+	// 1. 히트스캔으로 공격하기, AttackRange는 마음대로
+	// 2. Debugdraw까지.
+	FHitResult hitResult;
+	FCollisionQueryParams params(NAME_None, false, this);
+
+	float attackRange = 500.0f;
+	float attackRadius = 150.0f;
+
+	bool bResult = GetWorld()->SweepSingleByChannel
+	(
+		hitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * attackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(attackRadius),
+		params
+	);
+
+	FVector vec = GetActorForwardVector() * attackRange;
+	UE_LOG(LogTemp, Log, TEXT("%s"), *vec.ToString());
+	FVector center = GetActorLocation() + vec * 0.5f;
+
+	FColor drawColor = FColor::Green;
+
+	//FDamageEvent DamageEvent = FDamageEvent();
+
+	if (bResult && hitResult.GetActor()->IsValidLowLevel())
+	{
+		//UE_LOG(LogTemp, Log, TEXT("HitActor : %s"), *hitResult.GetActor()->GetName());
+		drawColor = FColor::Red;
+
+		// TODE : TakeDamage
+		FDamageEvent damageEvent;
+		hitResult.GetActor()->TakeDamage(_attackDamage, damageEvent, GetController(), this);
+	}
+	DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
 }
 
 void AMyCharacter::Move(const FInputActionValue& value)
@@ -132,16 +198,21 @@ void AMyCharacter::AttackA(const FInputActionValue& value)
 {
 	bool isPressed = value.Get<bool>();
 
-	if (isPressed && _isAttcking == false)
+	if (isPressed && _isAttcking == false && _animInstance != nullptr)
 	{
-		auto myAniml = GetMesh()->GetAnimInstance();
-		Cast<UMyAnimInstance>(myAniml)->PlayAttackMontage();
+		//auto myAniml = GetMesh()->GetAnimInstance();
+		_animInstance->PlayAttackMontage();
 		_isAttcking = true;
 
-		_curAttackIndex %= 3;
+		_curAttackIndex %= 4;
 		_curAttackIndex++;
 
-		Cast< UMyAnimInstance>(myAniml)->JumpToSection(_curAttackIndex);
+		_animInstance->JumpToSection(_curAttackIndex);
 	}
+}
+
+void AMyCharacter::Init()
+{
+	_curHP = _maxHP;
 }
 

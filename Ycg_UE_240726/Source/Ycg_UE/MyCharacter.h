@@ -11,6 +11,8 @@ class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
 
+DECLARE_DELEGATE(DelegateTest1);
+DECLARE_DELEGATE_OneParam(DelegateTestOneParam, int32)
 DECLARE_DELEGATE_TwoParams(DelegateTestTwoParams, int32, int32)
 
 UCLASS()
@@ -25,6 +27,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 public:	
 	// Called every frame
@@ -32,6 +35,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 
 	UFUNCTION()
 		void onAttackEnded(class UAnimMontage* Montage, bool bInterrupted);
@@ -45,6 +51,7 @@ protected:
 	void JumpA(const FInputActionValue& value);
 	void AttackA(const FInputActionValue& value);
 
+	void Init();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -71,7 +78,21 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		float _Horizontal = 0.0f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
+		int32 _curHP = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
+		int32 _maxHP = 300;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
+		int32 _attackDamage = 10;
+
 public:
+	// Animation
+	class UMyAnimInstance* _animInstance;
+
+
+	// camera
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* _springArm;
 
