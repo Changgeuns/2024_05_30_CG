@@ -53,6 +53,9 @@ protected:
 
 	void Init();
 
+	UFUNCTION()
+	void Disable();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		UInputAction* _moveAction;
@@ -85,7 +88,7 @@ public:
 		int32 _maxHP = 300;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
-		int32 _attackDamage = 10;
+		int32 _attackDamage = 250;
 
 public:
 	// Animation
@@ -101,4 +104,6 @@ public:
 
 
 	DelegateTestTwoParams _myDelegate3;
+
+
 };

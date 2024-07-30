@@ -60,6 +60,7 @@ void AMyCharacter::PostInitializeComponents()
 	// 몽타주가 끝날때 _isAttack 을 false로 만들어줬으면 좋겠다.
 	_animInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::onAttackEnded);
 	_animInstance->_attackDelegate.AddUObject(this, &AMyCharacter::AttackHit);
+	_animInstance->_deathDelegate.AddUObject(this, &AMyCharacter::Disable);
 }
 
 // Called every frame
@@ -100,10 +101,10 @@ float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 	// 2. 공격자 이름 출력
 	_curHP -= Damage;
 
-	UE_LOG(LogTemp, Log, TEXT("Attack : %s, curHP : %d"), *DamageCauser->GetName(), _curHP);
-	
-	if (_curHP < 0)
+	if (_curHP <= 0)
+	{
 		_curHP = 0;
+	}
 
 
 	return _curHP;
@@ -111,14 +112,11 @@ float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 
 void AMyCharacter::onAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	UE_LOG(LogTemp, Error, TEXT("Attack End!!"));
 	_isAttcking = false;
 }
 
 void AMyCharacter::AttackHit()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Attack!!!"));
-
 	// TODO : 
 	// 1. 히트스캔으로 공격하기, AttackRange는 마음대로
 	// 2. Debugdraw까지.
@@ -149,7 +147,6 @@ void AMyCharacter::AttackHit()
 
 	if (bResult && hitResult.GetActor()->IsValidLowLevel())
 	{
-		//UE_LOG(LogTemp, Log, TEXT("HitActor : %s"), *hitResult.GetActor()->GetName());
 		drawColor = FColor::Red;
 
 		// TODE : TakeDamage
@@ -158,6 +155,7 @@ void AMyCharacter::AttackHit()
 	}
 	DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
 }
+
 
 void AMyCharacter::Move(const FInputActionValue& value)
 {
@@ -189,7 +187,6 @@ void AMyCharacter::JumpA(const FInputActionValue& value)
 
 	if (isPressed)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Jump!!"));
 		ACharacter::Jump();
 	}
 }
@@ -214,5 +211,15 @@ void AMyCharacter::AttackA(const FInputActionValue& value)
 void AMyCharacter::Init()
 {
 	_curHP = _maxHP;
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
 }
+
+void AMyCharacter::Disable()
+{
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	PrimaryActorTick.bCanEverTick = false;
+}
+
 

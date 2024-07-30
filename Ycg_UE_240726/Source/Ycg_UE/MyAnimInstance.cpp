@@ -13,10 +13,13 @@ UMyAnimInstance::UMyAnimInstance()
 	(TEXT("/Script/Engine.AnimMontage'/Game/BluePrint/Animasion/myAnimMontage.myAnimMontage'"));
 	
 
+
 	if (am.Succeeded())
 	{
 		_myAnimMontage = am.Object;
 	}
+
+	
 }
 
 void UMyAnimInstance::NativeUpdateAnimation(float DeltaSecinds)
@@ -29,6 +32,7 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSecinds)
 		_isFalling = MyCharacter->GetMovementComponent()->IsFalling();
 		_vertical = _vertical + (MyCharacter->_vertical - _vertical) * (DeltaSecinds);
 		_horizontal = _horizontal + (MyCharacter->_Horizontal - _horizontal) * (DeltaSecinds);
+		_isDeed = (MyCharacter->_curHP <= 0);
 	}
 }
 
@@ -39,12 +43,14 @@ void UMyAnimInstance::PlayAttackMontage()
 		Montage_Play(_myAnimMontage);
 
 		AMyCharacter* MyCharacter = Cast<AMyCharacter>(TryGetPawnOwner());
+		MyCharacter->_myDelegate3.BindUObject(this, &UMyAnimInstance::DelegateTest2);
 		// 구독신청을 한다
 		//MyCharacter->_myDelegate1.BindUObject(this, &UMyAnimInstance::DelegateTest);
-		MyCharacter->_myDelegate3.BindUObject(this, &UMyAnimInstance::DelegateTest2);
 
 	}
 }
+
+
 
 void UMyAnimInstance::DelegateTest()
 {
@@ -65,6 +71,13 @@ void UMyAnimInstance::JumpToSection(int32 sectionIndex)
 void UMyAnimInstance::AnimNotify_AttackHit()
 {
 	// 공격시점 
+	// 
 	//
 	_attackDelegate.Broadcast();
 }
+
+void UMyAnimInstance::AnimNotify_Deedth()
+{
+	_deathDelegate.Broadcast();
+}
+
