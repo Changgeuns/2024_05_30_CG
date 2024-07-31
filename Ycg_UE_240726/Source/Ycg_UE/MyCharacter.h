@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MyCharacter.generated.h"
+#include "MyStatComponent.h"
+#include "MyCharacter.generated.h" // 제너레이터 헤더는 항상 맨밑에 와야함
 
 class UInputComponent;
 class UInputAction;
@@ -46,8 +47,8 @@ public:
 		void AttackHit();
 
 	// Stat 관련
-	int GetCurHp() { return _curHP; }
-	void AddAttackDamage(AActor* actor, int amount) { _attackDamage += amount; }
+	int GetCurHp() { return _statCom->GetCurHP(); }
+	void AddAttackDamage(AActor* actor, int amount);
 
 protected:
 	void Move(const FInputActionValue& value);
@@ -88,16 +89,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		float _Horizontal = 0.0f;
 	
-private:
-	//stat
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
-		int32 _curHP = 0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
-		int32 _maxHP = 300;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
-		int32 _attackDamage = 50;
 
 public:
 	// Animation
@@ -105,25 +97,37 @@ public:
 
 
 	// camera
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* _springArm;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* _camera;
 
+	//Stat
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat, meta = (AllowPrivateAccess = "true"))
+		int32 _level = 1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
+		class UMyStatComponent* _statCom;
+
+	// Inventory
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+		class UMyItemComponent* _InventoryCom;
 
 	DelegateTestTwoParams _myDelegate3;
 
-public:
+public: // 삭제가 베스트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory)
 		TArray<class AMyItem*> Inventory;
 
 	UFUNCTION()
-		void AddmyItem(class AMyItem* Item);
+		bool AddmyItem(class AMyItem* Item);
 
 	UFUNCTION()
 		void DropmyItem();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Inventory)
-		int32 MaxInventorySize = 3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+		int32 MaxInventorySize = 5;
+
+
 };

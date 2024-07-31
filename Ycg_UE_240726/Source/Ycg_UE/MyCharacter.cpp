@@ -10,7 +10,10 @@
 #include "Camera/CameraComponent.h"
 #include "MyAnimInstance.h"
 #include "Engine/DamageEvents.h" 
+#include "Math/UnrealMathUtility.h"
 #include "MyItem.h"
+#include "MyStatComponent.h"
+#include "MyItemComponent.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -43,6 +46,12 @@ AMyCharacter::AMyCharacter()
 	_springArm->SetRelativeRotation(FRotator(-35.0f, 0.0f, 0.0f));
 
 	RootComponent = GetCapsuleComponent();
+
+	//Stat
+	_statCom = CreateDefaultSubobject<UMyStatComponent>(TEXT("Stat"));
+
+	// Inventory
+	_InventoryCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("Inventory"));
 }
 
 // Called when the game starts or when spawned
@@ -65,6 +74,8 @@ void AMyCharacter::PostInitializeComponents()
 		_animInstance->_attackDelegate.AddUObject(this, &AMyCharacter::AttackHit);
 		_animInstance->_deathDelegate.AddUObject(this, &AMyCharacter::Disable);
 	}
+
+	_statCom->SetLevelAndInit(_level);
 }
 
 // Called every frame
@@ -105,16 +116,12 @@ float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 	// TODO :
 	// 1. hp -= Damage
 	// 2. 공격자 이름 출력
-	_curHP -= Damage;
-
-	UE_LOG(LogTemp, Log, TEXT("Name : %s, HP : %d / %d"), *DamageCauser->GetName(), _curHP, _maxHP);
-	if (_curHP <= 0)
-	{
-		_curHP = 0;
-	}
+	//_curHP -= Damage;
+	float damaged = _statCom->AddcurHP(-Damage);
+	UE_LOG(LogTemp, Log, TEXT("Name : %s, HP : %d / %d"),	*DamageCauser->GetName(), _statCom->GetCurHP(), _statCom->GetMaxHP());
 
 
-	return _curHP;
+	return damaged;
 }
 
 void AMyCharacter::onAttackEnded(UAnimMontage* Montage, bool bInterrupted)
@@ -131,7 +138,7 @@ void AMyCharacter::AttackHit()
 	FCollisionQueryParams params(NAME_None, false, this);
 
 	float attackRange = 500.0f;
-	float attackRadius = 150.0f;
+	float attackRadius = 100.0f;
 
 	bool bResult = GetWorld()->SweepSingleByChannel
 	(
@@ -158,11 +165,18 @@ void AMyCharacter::AttackHit()
 
 		// TODE : TakeDamage
 		FDamageEvent damageEvent;
-		hitResult.GetActor()->TakeDamage(_attackDamage, damageEvent, GetController(), this);
+		hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
 	}
 	DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
 }
 
+
+void AMyCharacter::AddAttackDamage(AActor* actor, int amount)
+{
+	// actor는 나의 공격력을 버프해준 대상(무기, 버프등)
+
+	_statCom->AddAttackDamage(amount);
+}
 
 void AMyCharacter::Move(const FInputActionValue& value)
 {
@@ -217,9 +231,10 @@ void AMyCharacter::AttackA(const FInputActionValue& value)
 
 void AMyCharacter::Init()
 {
-	_curHP = _maxHP;
+	_statCom->Reset();
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AMyCharacter::Disable()
@@ -228,85 +243,86 @@ void AMyCharacter::Disable()
 	SetActorEnableCollision(false);
 	PrimaryActorTick.bCanEverTick = false;
 
-	if (!Inventory.IsEmpty())
-	{
-		// 인벤토리 내 모든 아이템을 드랍
-		for (AMyItem* Item : Inventory)
-		{
-			if (Item)
-			{
-				// 아이템의 위치를 캐릭터의 현재 위치로 설정
-				FVector DropLocation = GetActorLocation();
-				float rand_X = FMath::RandRange(-2, 2);
-				float rand_Y = FMath::RandRange(-2, 2);
-				// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
-				DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
-
-				Item->SetActorLocation(DropLocation);
-				Item->SetActorHiddenInGame(false);
-				Item->SetActorEnableCollision(true);
-
-				UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *Item->GetName());
-			}
-		}
-
-		// 인벤토리 비우기
-		Inventory.Empty();
-	}
+	_InventoryCom->DeadAllDropItem();// 인벤 컴포
+	//if (!Inventory.IsEmpty())
+	//{
+	//	// 인벤토리 내 모든 아이템을 드랍
+	//	for (AMyItem* Item : Inventory)
+	//	{
+	//		if (Item)
+	//		{
+	//			// 아이템의 위치를 캐릭터의 현재 위치로 설정
+	//			FVector DropLocation = GetActorLocation();
+	//			float rand_X = FMath::RandRange(-2, 2);
+	//			float rand_Y = FMath::RandRange(-2, 2);
+	//			// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
+	//			DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
+	////
+	//			Item->SetActorLocation(DropLocation);
+	//			Item->SetActorHiddenInGame(false);
+	//			Item->SetActorEnableCollision(true);
+	////
+	//			UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *Item->GetName());
+	//		}
+	//	}
+	////
+	//	// 인벤토리 비우기
+	//	Inventory.Empty();
+	//}
 }
 
-void AMyCharacter::AddmyItem(AMyItem* Item)
+bool AMyCharacter::AddmyItem(AMyItem* Item)
 {
-	if (Inventory.Num() < MaxInventorySize)
-	{
-		Inventory.Add(Item);
-		// 필요에 따라 아이템의 콜리전이나 시각적 요소를 비활성화할 수 있습니다.
-		Item->SetActorHiddenInGame(true);
-		Item->SetActorEnableCollision(false);
-		// 아이템효과
-		AddAttackDamage(this, 100);
-
-		UE_LOG(LogTemp, Log, TEXT("인벤토리에 아이템 추가: %s"), *Item->GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("인벤토리가 가득 찼습니다!"));
-	}
+	return _InventoryCom->AddmyItem(Item); // 인벤컴포
 }
 
 void AMyCharacter::DropmyItem()
 {
-	if (Inventory.Num() > 0)
-	{
-		// 인벤토리에서 마지막 아이템을 드랍
-		AMyItem* ItemToDrop = Inventory.Last();
-		Inventory.Remove(ItemToDrop);
-		// 장비해제시 효과를 뺴야함
-		AddAttackDamage(this, -100);
-
-		// 캐릭터의 정면 방향 구하기
-		FVector ForwardVector = GetActorForwardVector();
-
-		float DropDistance = 150.0f; // 200~300 사이의 값으로 조정
-		FVector DropLocation = GetActorLocation() + (ForwardVector * DropDistance);
-		
-		float rand_X = FMath::RandRange(-2, 2);
-		float rand_Y = FMath::RandRange(-2, 2);
-		// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
-		DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
+	_InventoryCom->DropmyItem(); // 인벤컴포
+	AddAttackDamage(this, -20);
 
 
-		// 캐릭터 위치에 아이템 위치 설정
-		ItemToDrop->SetActorLocation(DropLocation);//(GetActorLocation() + FVector(300, 0, 0));
-		ItemToDrop->SetActorHiddenInGame(false);
-		ItemToDrop->SetActorEnableCollision(true);
 
-		UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *ItemToDrop->GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("드랍할 아이템이 없습니다."));
-	}
+
+	//if (Inventory.Num() > 0)
+	//{
+	//	// 인벤토리에서 마지막 아이템을 드랍
+	//	AMyItem* ItemToDrop = Inventory.Last();
+	//	Inventory.Remove(ItemToDrop);
+	//	// 장비해제시 효과를 뺴야함
+	//	AddAttackDamage(this, -20);
+
+	//	//// 캐릭터의 정면 방향 구하기
+	//	//FVector ForwardVector = GetActorForwardVector();
+
+	//	//float DropDistance = 150.0f; // 적당한 거리 값으로 조정
+	//	//FVector DropLocation = GetActorLocation() + (ForwardVector * DropDistance);
+	//	//
+	//	//float rand_X = FMath::RandRange(-2, 2);
+	//	//float rand_Y = FMath::RandRange(-2, 2);
+	//	//// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
+	//	//DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
+	//	// 캐릭터 위치에 아이템 위치 설정
+	//	//ItemToDrop->SetActorLocation(DropLocation);//(GetActorLocation() + FVector(300, 0, 0));
+	//	//ItemToDrop->SetActorHiddenInGame(false);
+	//	//ItemToDrop->SetActorEnableCollision(true);
+
+	//	float randflase = FMath::FRandRange(0, PI * 2.0f);
+
+	//	float X = cosf(randflase) * 300.0f;
+	//	float Y = sinf(randflase) * 300.0f;
+	//	FVector playerPos = GetActorLocation();
+	//	playerPos.Z = GetActorLocation().Z;
+	//	FVector itemPos = playerPos + FVector(X, Y, 0);
+	//	ItemToDrop->SetItemPos(itemPos);
+
+
+	//	UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *ItemToDrop->GetName());
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("드랍할 아이템이 없습니다."));
+	//}
 }
 
 

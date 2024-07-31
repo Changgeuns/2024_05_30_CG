@@ -48,6 +48,12 @@
     <ClInclude Include="..\..\Source\Ycg_UE\MyCharacter.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyGameInstance.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyGameInstance.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyGameModeBase.cpp">
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
@@ -60,6 +66,12 @@
     <ClInclude Include="..\..\Source\Ycg_UE\MyItem.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyItemComponent.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyItemComponent.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyPawn.cpp">
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
@@ -70,6 +82,12 @@
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
     <ClInclude Include="..\..\Source\Ycg_UE\MyPlayerController.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyStatComponent.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyStatComponent.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
     <None Include="..\..\Source\Ycg_UE\Ycg_UE.Build.cs">

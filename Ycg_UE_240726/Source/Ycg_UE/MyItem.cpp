@@ -53,8 +53,10 @@ void AMyItem::OnMyCharacterOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	auto myCharacter = Cast<AMyCharacter>(OtherActor);
 	if (myCharacter)
 	{
-		UE_LOG(LogTemp, Log, TEXT("%s Colliion"), *myCharacter->GetName());
-		myCharacter->AddmyItem(this);
+		//UE_LOG(LogTemp, Log, TEXT("%s Colliion"), *myCharacter->GetName());
+		if(myCharacter->AddmyItem(this))
+			Disable();
+		myCharacter->AddAttackDamage(this, 20);
 	}
 }
 
@@ -75,5 +77,12 @@ void AMyItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AMyItem::SetItemPos(FVector pos, FRotator rot)
+{
+	Init();
+	SetActorLocation(pos);
+	SetActorRotation(rot);
 }
 
