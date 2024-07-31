@@ -45,6 +45,10 @@ public:
 	UFUNCTION()
 		void AttackHit();
 
+	// Stat 관련
+	int GetCurHp() { return _curHP; }
+	void AddAttackDamage(AActor* actor, int amount) { _attackDamage += amount; }
+
 protected:
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
@@ -69,6 +73,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		UInputAction* _AttackAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		UInputAction* _ItemDropAction;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		bool _isAttcking = false;
 
@@ -80,7 +87,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		float _Horizontal = 0.0f;
-
+	
+private:
+	//stat
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
 		int32 _curHP = 0;
 
@@ -88,7 +97,7 @@ public:
 		int32 _maxHP = 300;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
-		int32 _attackDamage = 250;
+		int32 _attackDamage = 50;
 
 public:
 	// Animation
@@ -105,5 +114,16 @@ public:
 
 	DelegateTestTwoParams _myDelegate3;
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory)
+		TArray<class AMyItem*> Inventory;
 
+	UFUNCTION()
+		void AddmyItem(class AMyItem* Item);
+
+	UFUNCTION()
+		void DropmyItem();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Inventory)
+		int32 MaxInventorySize = 3;
 };

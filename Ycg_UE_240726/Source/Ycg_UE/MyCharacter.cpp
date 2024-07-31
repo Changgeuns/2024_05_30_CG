@@ -10,6 +10,7 @@
 #include "Camera/CameraComponent.h"
 #include "MyAnimInstance.h"
 #include "Engine/DamageEvents.h" 
+#include "MyItem.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -58,9 +59,12 @@ void AMyCharacter::PostInitializeComponents()
 
 	_animInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
 	// 몽타주가 끝날때 _isAttack 을 false로 만들어줬으면 좋겠다.
-	_animInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::onAttackEnded);
-	_animInstance->_attackDelegate.AddUObject(this, &AMyCharacter::AttackHit);
-	_animInstance->_deathDelegate.AddUObject(this, &AMyCharacter::Disable);
+	if (_animInstance->IsValidLowLevel())
+	{
+		_animInstance->OnMontageEnded.AddDynamic(this, &AMyCharacter::onAttackEnded);
+		_animInstance->_attackDelegate.AddUObject(this, &AMyCharacter::AttackHit);
+		_animInstance->_deathDelegate.AddUObject(this, &AMyCharacter::Disable);
+	}
 }
 
 // Called every frame
@@ -89,6 +93,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		// Attacks
 		EnhancedInputComponent->BindAction(_AttackAction, ETriggerEvent::Started, this, &AMyCharacter::AttackA);
 
+		// ItemDrop
+		EnhancedInputComponent->BindAction(_ItemDropAction, ETriggerEvent::Started, this, &AMyCharacter::DropmyItem);
 
 	}
 }
@@ -101,6 +107,7 @@ float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 	// 2. 공격자 이름 출력
 	_curHP -= Damage;
 
+	UE_LOG(LogTemp, Log, TEXT("Name : %s, HP : %d / %d"), *DamageCauser->GetName(), _curHP, _maxHP);
 	if (_curHP <= 0)
 	{
 		_curHP = 0;
@@ -220,6 +227,86 @@ void AMyCharacter::Disable()
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
 	PrimaryActorTick.bCanEverTick = false;
+
+	if (!Inventory.IsEmpty())
+	{
+		// 인벤토리 내 모든 아이템을 드랍
+		for (AMyItem* Item : Inventory)
+		{
+			if (Item)
+			{
+				// 아이템의 위치를 캐릭터의 현재 위치로 설정
+				FVector DropLocation = GetActorLocation();
+				float rand_X = FMath::RandRange(-2, 2);
+				float rand_Y = FMath::RandRange(-2, 2);
+				// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
+				DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
+
+				Item->SetActorLocation(DropLocation);
+				Item->SetActorHiddenInGame(false);
+				Item->SetActorEnableCollision(true);
+
+				UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *Item->GetName());
+			}
+		}
+
+		// 인벤토리 비우기
+		Inventory.Empty();
+	}
+}
+
+void AMyCharacter::AddmyItem(AMyItem* Item)
+{
+	if (Inventory.Num() < MaxInventorySize)
+	{
+		Inventory.Add(Item);
+		// 필요에 따라 아이템의 콜리전이나 시각적 요소를 비활성화할 수 있습니다.
+		Item->SetActorHiddenInGame(true);
+		Item->SetActorEnableCollision(false);
+		// 아이템효과
+		AddAttackDamage(this, 100);
+
+		UE_LOG(LogTemp, Log, TEXT("인벤토리에 아이템 추가: %s"), *Item->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("인벤토리가 가득 찼습니다!"));
+	}
+}
+
+void AMyCharacter::DropmyItem()
+{
+	if (Inventory.Num() > 0)
+	{
+		// 인벤토리에서 마지막 아이템을 드랍
+		AMyItem* ItemToDrop = Inventory.Last();
+		Inventory.Remove(ItemToDrop);
+		// 장비해제시 효과를 뺴야함
+		AddAttackDamage(this, -100);
+
+		// 캐릭터의 정면 방향 구하기
+		FVector ForwardVector = GetActorForwardVector();
+
+		float DropDistance = 150.0f; // 200~300 사이의 값으로 조정
+		FVector DropLocation = GetActorLocation() + (ForwardVector * DropDistance);
+		
+		float rand_X = FMath::RandRange(-2, 2);
+		float rand_Y = FMath::RandRange(-2, 2);
+		// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
+		DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
+
+
+		// 캐릭터 위치에 아이템 위치 설정
+		ItemToDrop->SetActorLocation(DropLocation);//(GetActorLocation() + FVector(300, 0, 0));
+		ItemToDrop->SetActorHiddenInGame(false);
+		ItemToDrop->SetActorEnableCollision(true);
+
+		UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *ItemToDrop->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("드랍할 아이템이 없습니다."));
+	}
 }
 
 
