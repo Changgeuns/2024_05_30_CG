@@ -2,6 +2,9 @@
 
 
 #include "MyStatComponent.h"
+
+#include "MyCharacter.h"
+#include "MyHpBar.h"
 #include "MyGameInstance.h"
 
 // Sets default values for this component's properties
@@ -21,7 +24,7 @@ void UMyStatComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+
 }
 
 
@@ -35,9 +38,8 @@ void UMyStatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UMyStatComponent::Reset()
 {
-	_curHP = _maxHP;
+	_curHp = _maxHp;
 }
-
 
 void UMyStatComponent::SetLevelAndInit(int level)
 {
@@ -45,30 +47,39 @@ void UMyStatComponent::SetLevelAndInit(int level)
 	if (myGameInstance)
 	{
 		FMyStatData* data = myGameInstance->GetStatDataByLevel(level);
-		_maxHP = data->maxHP;
+		_maxHp = data->maxHP;
 		_attackDamage = data->attack;
-		_curHP = _maxHP;
+		_curHp = _maxHp;
 
-		UE_LOG(LogTemp, Log, TEXT("%s... HP : %d, attackDamage : %d"), *GetOwner()->GetName(), _maxHP, _attackDamage);
+		UE_LOG(LogTemp, Log, TEXT("%s... hp : %d, attackDamage : %d"), *GetOwner()->GetName(), _maxHp, _attackDamage);
 	}
 }
 
-int UMyStatComponent::AddcurHP(float amount)
+void UMyStatComponent::SetHp(int32 hp)
 {
-	int beforeHp = _curHP;
+	// curHp의 수정은 무조건 이 함수를 통해서 이루어진다.
+	// => 이 함수가 호출될 때마다 hpBar가 바뀌면 되겠다.
+	_curHp = hp;
+	if (_curHp < 0)
+		_curHp = 0;
+	if (_curHp > _maxHp)
+		_curHp = _maxHp;
+
+	float ratio = HpRatio();
+	_hpChangedDelegate.Broadcast(ratio);
+}
+
+int UMyStatComponent::AddCurHp(float amount)
+{
+	int beforeHp = _curHp;
 
 	// amount damage가 들어왔을 때
-	// 방어력 스탯마다, 데미지 경감등의 옵션으로amount가 줄어든 채로 curHP에 더해진다.
-	// ex) amount * 0.8;
-	_curHP += amount;
+	// 방어력 스탯이나, 데미지 경감 등의 옵션으로  amount가 줄어든 채로  curHp에 더해진다.
+	// ex) amount *= 0.8f;
+	int afterHp = beforeHp + amount;
+	SetHp(afterHp);
 
-	if (_curHP < 0)
-		_curHP = 0;
-
-	if (_curHP > _maxHP)
-		_curHP = _maxHP;
-
-	return beforeHp - _curHP;
+	return afterHp - beforeHp;
 }
 
 void UMyStatComponent::AddAttackDamage(float amount)

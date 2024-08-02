@@ -10,7 +10,9 @@ UMyItemComponent::UMyItemComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
+
+	
 
 	// ...
 }
@@ -22,7 +24,7 @@ void UMyItemComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+
 }
 
 
@@ -33,6 +35,13 @@ void UMyItemComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UMyItemComponent::Setmy()
+{
+	// 배열 초기화
+	Inventory = TArray<AMyItem*>();
+	MaxInventorySize = 5;
 }
 
 bool UMyItemComponent::AddmyItem(AMyItem* Item)
@@ -51,14 +60,15 @@ bool UMyItemComponent::AddmyItem(AMyItem* Item)
 	}
 }
 
-void UMyItemComponent::DropmyItem()
+void UMyItemComponent::DropmyItem(AActor* my_char)
 {
+	auto myCharacter = Cast<AMyCharacter>(my_char);
 	if (Inventory.Num() > 0)
 	{
 		// 인벤토리에서 마지막 아이템을 드랍
 		AMyItem* ItemToDrop = Inventory.Last();
 		Inventory.Remove(ItemToDrop);
-		
+
 
 		float randflase = FMath::FRandRange(0, PI * 2.0f);
 
@@ -68,7 +78,7 @@ void UMyItemComponent::DropmyItem()
 		playerPos.Z = GetOwner()->GetActorLocation().Z;
 		FVector itemPos = playerPos + FVector(X, Y, 0);
 		ItemToDrop->SetItemPos(itemPos);
-
+		myCharacter->AddAttackDamage(my_char, -10);
 
 		UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *ItemToDrop->GetName());
 	}
@@ -78,31 +88,31 @@ void UMyItemComponent::DropmyItem()
 	}
 }
 
-void UMyItemComponent::DeadAllDropItem()
-{
-	if (!Inventory.IsEmpty())
-	{
-		// 인벤토리 내 모든 아이템을 드랍
-		for (AMyItem* Item : Inventory)
-		{
-			if (Item)
-			{
-				// 아이템의 위치를 캐릭터의 현재 위치로 설정
-				FVector DropLocation = GetOwner()->GetActorLocation();
-				float rand_X = FMath::RandRange(-2, 2);
-				float rand_Y = FMath::RandRange(-2, 2);
-				// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
-				DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
-
-				Item->SetActorLocation(DropLocation);
-				Item->SetActorHiddenInGame(false);
-				Item->SetActorEnableCollision(true);
-
-				UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *Item->GetName());
-			}
-		}
-
-		// 인벤토리 비우기
-		Inventory.Empty();
-	}
-}
+//void UMyItemComponent::DeadAllDropItem()
+//{
+//	if (!Inventory.IsEmpty())
+//	{
+//		// 인벤토리 내 모든 아이템을 드랍
+//		for (AMyItem* Item : Inventory)
+//		{
+//			if (Item)
+//			{
+//				// 아이템의 위치를 캐릭터의 현재 위치로 설정
+//				FVector DropLocation = GetOwner()->GetActorLocation();
+//				float rand_X = FMath::RandRange(-2, 2);
+//				float rand_Y = FMath::RandRange(-2, 2);
+//				// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
+//				DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
+//
+//				Item->SetActorLocation(DropLocation);
+//				Item->SetActorHiddenInGame(false);
+//				Item->SetActorEnableCollision(true);
+//
+//				UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *Item->GetName());
+//			}
+//		}
+//
+//		// 인벤토리 비우기
+//		Inventory.Empty();
+//	}
+//}

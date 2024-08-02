@@ -14,11 +14,15 @@
 #include "MyItem.h"
 #include "MyStatComponent.h"
 #include "MyItemComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "MyHpBar.h"
+#include "MyInventoryUI.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// TODE
@@ -51,15 +55,59 @@ AMyCharacter::AMyCharacter()
 	_statCom = CreateDefaultSubobject<UMyStatComponent>(TEXT("Stat"));
 
 	// Inventory
-	_InventoryCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("Inventory"));
+	//_InventoryCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("Inventory1"));
+
+	_InvenCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("InvenCom"));
+
+	_hpbarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBaa"));
+	_hpbarWidget->SetupAttachment(GetMesh());
+	_hpbarWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	_hpbarWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 230.0f));
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> hpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MyHpBar_BP.MyHpBar_BP_C'"));
+
+	if (hpBar.Succeeded())
+	{
+		_hpbarWidget->SetWidgetClass(hpBar.Class);
+	}
+
+	static ConstructorHelpers::FClassFinder<UMyInventoryUI> invenClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MyInventory_BP.MyInventory_BP_C'"));
+
+
+	if (invenClass.Succeeded())
+	{
+		_invenWidget = CreateWidget<UUserWidget>(GetWorld(), invenClass.Class);
+	}
+
+	//_invenWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Inven"));
+	//_invenWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	//_invenWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	////
+	////
+	//static ConstructorHelpers::FClassFinder<UUserWidget> inven(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MyInventory_BP.MyInventory_BP_C'"));
+	////
+	//if (inven.Succeeded())
+	//{
+	//	_invenWidget->SetWidgetClass(inven.Class);
+	//}
+
 }
 
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	Init();
+
+	if (_invenWidget)
+	{
+		_invenWidget->AddToViewport();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("inven widget did not .."));
+	}
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -76,6 +124,14 @@ void AMyCharacter::PostInitializeComponents()
 	}
 
 	_statCom->SetLevelAndInit(_level);
+
+	_hpbarWidget->InitWidget();
+	auto hpBar = Cast<UMyHpBar>(_hpbarWidget->GetUserWidgetObject());
+
+	if (hpBar)
+	{
+		_statCom->_hpChangedDelegate.AddUObject(hpBar, &UMyHpBar::SetHpBarValue);
+	}
 }
 
 // Called every frame
@@ -117,8 +173,8 @@ float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 	// 1. hp -= Damage
 	// 2. 공격자 이름 출력
 	//_curHP -= Damage;
-	float damaged = _statCom->AddcurHP(-Damage);
-	UE_LOG(LogTemp, Log, TEXT("Name : %s, HP : %d / %d"),	*DamageCauser->GetName(), _statCom->GetCurHP(), _statCom->GetMaxHP());
+	float damaged = _statCom->AddCurHp(-Damage);
+	UE_LOG(LogTemp, Log, TEXT("Name : %s, HP : %d / %d"), *DamageCauser->GetName(), _statCom->GetCurHp(), _statCom->GetMaxHp());
 
 
 	return damaged;
@@ -243,7 +299,7 @@ void AMyCharacter::Disable()
 	SetActorEnableCollision(false);
 	PrimaryActorTick.bCanEverTick = false;
 
-	_InventoryCom->DeadAllDropItem();// 인벤 컴포
+	//_InventoryCom->DeadAllDropItem();// 인벤 컴포
 	//if (!Inventory.IsEmpty())
 	//{
 	//	// 인벤토리 내 모든 아이템을 드랍
@@ -273,13 +329,44 @@ void AMyCharacter::Disable()
 
 bool AMyCharacter::AddmyItem(AMyItem* Item)
 {
-	return _InventoryCom->AddmyItem(Item); // 인벤컴포
+	bool result = false;
+	if (!_InvenCom->IsValidLowLevel())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Inventory null"));
+	}
+	else
+	{
+		result = _InvenCom->AddmyItem(Item);
+	}
+	return result; // 인벤컴포
+
+	/*if (!_InventoryCom)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Inventory Component is not initialized!"));
+		return false;
+	}
+
+	return _InventoryCom->AddmyItem(Item);*/
+
+	/*if (Inventory.IsEmpty() < MaxInventorySize)
+	{
+		Inventory.Add(Item);
+
+		UE_LOG(LogTemp, Log, TEXT("인벤토리에 아이템 추가: %s"), *Item->GetName());
+		return true;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("인벤토리가 가득 찼습니다!"));
+		return false;
+	}*/
+
 }
 
 void AMyCharacter::DropmyItem()
 {
-	_InventoryCom->DropmyItem(); // 인벤컴포
-	AddAttackDamage(this, -20);
+	_InvenCom->DropmyItem(this); // 인벤컴포
+	//AddAttackDamage(this, -20);
 
 
 

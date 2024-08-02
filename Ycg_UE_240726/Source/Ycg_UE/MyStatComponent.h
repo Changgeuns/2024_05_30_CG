@@ -15,20 +15,22 @@ struct FMyStatData : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 level;
+	int32 level = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 maxHP;
+	int32 maxHP = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 attack;
+	int32 attack = 0;
 
 };
+
+DECLARE_MULTICAST_DELEGATE_OneParam(HpChanged, float)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class YCG_UE_API UMyStatComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UMyStatComponent();
 
@@ -36,31 +38,37 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void Reset();
 
-	int32 GetCurHP() { return _curHP; }
-	int32 GetMaxHP() { return _maxHP; }
+	int32 GetCurHp() { return _curHp; }
+	int32 GetMaxHp() { return _maxHp; }
 	int32 GetAttackDamage() { return _attackDamage; }
+	float HpRatio() { return _curHp / (float)_maxHp; }
 
 	void SetLevelAndInit(int level);
 
-	int AddcurHP(float amount);
+	void SetHp(int32 hp);
+	int AddCurHp(float amount);
 	void AddAttackDamage(float amount);
 
-	bool IsDead() { return _curHP <= 0; }
+	bool IsDead() { return _curHp <= 0; }
+
+	HpChanged _hpChangedDelegate;
+
 protected:
-	//stat
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-		int32 _curHP = 0;
+		int32 _curHp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-		int32 _maxHP = 0;
+		int32 _maxHp = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 		int32 _attackDamage = 0;
+
+
 		
 };

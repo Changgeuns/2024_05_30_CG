@@ -54,9 +54,11 @@ void AMyItem::OnMyCharacterOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	if (myCharacter)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("%s Colliion"), *myCharacter->GetName());
-		if(myCharacter->AddmyItem(this))
+		if (myCharacter->AddmyItem(this))
+		{
 			Disable();
-		myCharacter->AddAttackDamage(this, 20);
+			myCharacter->AddAttackDamage(this, 10);
+		}
 	}
 }
 

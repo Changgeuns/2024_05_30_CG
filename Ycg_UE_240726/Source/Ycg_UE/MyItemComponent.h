@@ -4,16 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "MyItem.h"
 #include "MyItemComponent.generated.h"
 
-class AMyItem;
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class YCG_UE_API UMyItemComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UMyItemComponent();
 
@@ -21,25 +20,25 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-
+	void Setmy();
 public:
 	UFUNCTION()
 		bool AddmyItem(class AMyItem* Item);
 
 	UFUNCTION()
-		void DropmyItem();
+		void DropmyItem(AActor* my_char);
 
-	UFUNCTION()
-		void DeadAllDropItem();
+	/*UFUNCTION()
+		void DeadAllDropItem();*/
 
-private:
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
-        TArray<AMyItem*> Inventory;
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = InvenCom, meta = (AllowPrivateAccess = "true"))
+		TArray<class AMyItem*> Inventory;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
-        int32 MaxInventorySize = 5;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = InvenCom, meta = (AllowPrivateAccess = "true"))
+		int32 MaxInventorySize = 5;
 };

@@ -60,6 +60,18 @@
     <ClInclude Include="..\..\Source\Ycg_UE\MyGameModeBase.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyHpBar.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyHpBar.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyInventoryUI.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyInventoryUI.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyItem.cpp">
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
