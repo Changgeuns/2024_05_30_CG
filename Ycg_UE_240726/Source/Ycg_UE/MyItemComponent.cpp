@@ -37,13 +37,6 @@ void UMyItemComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-void UMyItemComponent::Setmy()
-{
-	// 배열 초기화
-	Inventory = TArray<AMyItem*>();
-	MaxInventorySize = 5;
-}
-
 bool UMyItemComponent::AddmyItem(AMyItem* Item)
 {
 	if (Inventory.Num() < MaxInventorySize)
@@ -51,6 +44,8 @@ bool UMyItemComponent::AddmyItem(AMyItem* Item)
 		Inventory.Add(Item);
 
 		UE_LOG(LogTemp, Log, TEXT("인벤토리에 아이템 추가: %s"), *Item->GetName());
+		_itemAddedEvent.Broadcast(Item->_itemId, Inventory.Num() - 1);
+
 		return true;
 	}
 	else

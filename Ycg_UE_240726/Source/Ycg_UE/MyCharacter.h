@@ -51,6 +51,7 @@ public:
 	int GetCurHp() { return _statCom->GetCurHp(); }
 	void AddAttackDamage(AActor* actor, int amount);
 
+
 protected:
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
@@ -104,30 +105,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* _camera;
 
-	//Stat
+	//Component
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat, meta = (AllowPrivateAccess = "true"))
 		int32 _level = 1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 		class UMyStatComponent* _statCom;
-	// Hp bar
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 		class UWidgetComponent* _hpbarWidget;
 
-	// Inven
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-	//	class UWidgetComponent* _invenWidget;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = InvenCom, meta = (AllowPrivateAccess = "true"))
+		class UMyItemComponent* _InvenCom;
+
+
+	//UI
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 		class UUserWidget* _invenWidget;
-
 	// UCLASS 매크로가 있고, UObject를 상속받는 클래스 자체를 지정할수 있는 변수 자료형
 	//TSubclassOf<class UUserWidget> _invenClass;
 
-	// Inventory
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
-		//class UMyItemComponent* _InventoryCom; // 어쨰선진몰라도 이이름이면 터짐 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = InvenCom, meta = (AllowPrivateAccess = "true"))
-		class UMyItemComponent* _InvenCom;
+
+
+	
 	UFUNCTION()
 		bool AddmyItem(class AMyItem* Item);
 

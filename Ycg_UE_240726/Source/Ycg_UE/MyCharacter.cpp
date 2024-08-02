@@ -76,6 +76,7 @@ AMyCharacter::AMyCharacter()
 
 	if (invenClass.Succeeded())
 	{
+		auto temp = invenClass.Class;
 		_invenWidget = CreateWidget<UUserWidget>(GetWorld(), invenClass.Class);
 	}
 
@@ -131,6 +132,13 @@ void AMyCharacter::PostInitializeComponents()
 	if (hpBar)
 	{
 		_statCom->_hpChangedDelegate.AddUObject(hpBar, &UMyHpBar::SetHpBarValue);
+	}
+
+	auto invenUI = Cast<UMyInventoryUI>(_invenWidget);
+
+	if (invenUI)
+	{
+		_InvenCom->_itemAddedEvent.AddUObject(invenUI, &UMyInventoryUI::SetItem);
 	}
 }
 

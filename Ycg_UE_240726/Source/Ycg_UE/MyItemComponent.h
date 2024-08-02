@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "MyItem.h"
 #include "MyItemComponent.generated.h"
+
+class AMyIte;
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(ItemAdded, int itemId, int itemIndex)
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class YCG_UE_API UMyItemComponent : public UActorComponent
@@ -24,18 +27,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Setmy();
 public:
-	UFUNCTION()
-		bool AddmyItem(class AMyItem* Item);
+	bool AddmyItem(class AMyItem* Item);
+	void DropmyItem(AActor* my_char);
 
-	UFUNCTION()
-		void DropmyItem(AActor* my_char);
+	ItemAdded _itemAddedEvent;
 
-	/*UFUNCTION()
-		void DeadAllDropItem();*/
+	//void DeadAllDropItem();
 
-public:
+private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = InvenCom, meta = (AllowPrivateAccess = "true"))
 		TArray<class AMyItem*> Inventory;
 
