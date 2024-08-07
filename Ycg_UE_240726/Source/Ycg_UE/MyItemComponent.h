@@ -29,7 +29,9 @@ public:
 
 public:
 	bool AddmyItem(class AMyItem* Item);
-	void DropmyItem(AActor* my_char);
+	void DropTaget(AActor* my_char);
+	UFUNCTION()
+	void DropmyItem();
 
 	ItemAdded _itemAddedEvent;
 
@@ -41,4 +43,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = InvenCom, meta = (AllowPrivateAccess = "true"))
 		int32 MaxInventorySize = 5;
+
+	class AMyCharacter* player_this;
 };

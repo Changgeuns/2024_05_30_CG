@@ -30,6 +30,24 @@
     <Filter Include="Source\Ycg_UE">
       <UniqueIdentifier>{9B8CD475-B284-3C3C-94B0-7FB0441ED64F}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyActor.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyActor.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyAnimInstance.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyAnimInstance.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyCharacter.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyCharacter.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyGameInstance.cpp">
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
@@ -42,6 +60,54 @@
     <ClInclude Include="..\..\Source\Ycg_UE\MyGameModeBase.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyHpBar.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyHpBar.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyInventoryUI.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyInventoryUI.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyItem.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyItem.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyItemComponent.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyItemComponent.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyPawn.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyPawn.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyPlayerController.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyPlayerController.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyStatComponent.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyStatComponent.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyUIManager.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyUIManager.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <None Include="..\..\Source\Ycg_UE\Ycg_UE.Build.cs">
       <Filter>Source\Ycg_UE</Filter>
     </None>
@@ -51,86 +117,5 @@
     <ClInclude Include="..\..\Source\Ycg_UE\Ycg_UE.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Source\Ycg_UE\Component">
-      <UniqueIdentifier>{4108b9b0-433f-43af-83d9-907fb261a57c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Ycg_UE\Animation">
-      <UniqueIdentifier>{6525932a-5a9d-4ccc-89bc-0c63a8d2c5a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Ycg_UE\Objects">
-      <UniqueIdentifier>{6302cf6c-356c-4f5a-a49a-d84b9792e1a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Ycg_UE\Controller">
-      <UniqueIdentifier>{e3445a74-f78f-4d65-ab43-616e614c2101}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Ycg_UE\UI">
-      <UniqueIdentifier>{90beb9d0-1d46-4fcd-8c83-3298e718dc11}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyAnimInstance.h">
-      <Filter>Source\Ycg_UE\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyActor.h">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyCharacter.h">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyItem.h">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyPawn.h">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyHpBar.h">
-      <Filter>Source\Ycg_UE\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyInventoryUI.h">
-      <Filter>Source\Ycg_UE\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyPlayerController.h">
-      <Filter>Source\Ycg_UE\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyStatComponent.h">
-      <Filter>Source\Ycg_UE\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Ycg_UE\MyItemComponent.h">
-      <Filter>Source\Ycg_UE\Component</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyAnimInstance.cpp">
-      <Filter>Source\Ycg_UE\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyCharacter.cpp">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyActor.cpp">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyItem.cpp">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyPawn.cpp">
-      <Filter>Source\Ycg_UE\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyHpBar.cpp">
-      <Filter>Source\Ycg_UE\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyInventoryUI.cpp">
-      <Filter>Source\Ycg_UE\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyPlayerController.cpp">
-      <Filter>Source\Ycg_UE\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyItemComponent.cpp">
-      <Filter>Source\Ycg_UE\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Ycg_UE\MyStatComponent.cpp">
-      <Filter>Source\Ycg_UE\Component</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

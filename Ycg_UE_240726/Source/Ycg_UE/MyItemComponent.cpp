@@ -55,15 +55,28 @@ bool UMyItemComponent::AddmyItem(AMyItem* Item)
 	}
 }
 
-void UMyItemComponent::DropmyItem(AActor* my_char)
+void UMyItemComponent::DropTaget(AActor* my_char)
 {
 	auto myCharacter = Cast<AMyCharacter>(my_char);
+
+	player_this = myCharacter;
+	DropmyItem();
+}
+
+void UMyItemComponent::DropmyItem()
+{
+	if (player_this == nullptr)
+	{
+		&AMyCharacter::DropmyItem;
+	}
+
 	if (Inventory.Num() > 0)
 	{
 		// 인벤토리에서 마지막 아이템을 드랍
 		AMyItem* ItemToDrop = Inventory.Last();
+		int itemSize = Inventory.Num();
 		Inventory.Remove(ItemToDrop);
-
+		_itemAddedEvent.Broadcast(-1, itemSize - 1);
 
 		float randflase = FMath::FRandRange(0, PI * 2.0f);
 
@@ -73,7 +86,7 @@ void UMyItemComponent::DropmyItem(AActor* my_char)
 		playerPos.Z = GetOwner()->GetActorLocation().Z;
 		FVector itemPos = playerPos + FVector(X, Y, 0);
 		ItemToDrop->SetItemPos(itemPos);
-		myCharacter->AddAttackDamage(my_char, -10);
+		player_this->AddAttackDamage(player_this, -10);
 
 		UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *ItemToDrop->GetName());
 	}

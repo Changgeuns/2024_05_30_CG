@@ -52,6 +52,9 @@ public:
 	void AddAttackDamage(AActor* actor, int amount);
 
 
+	bool AddmyItem(class AMyItem* Item);
+	void DropmyItem();
+
 protected:
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
@@ -119,19 +122,14 @@ public:
 
 
 	//UI
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-		class UUserWidget* _invenWidget;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
+	//	class UUserWidget* _invenWidget;
 	// UCLASS 매크로가 있고, UObject를 상속받는 클래스 자체를 지정할수 있는 변수 자료형
 	//TSubclassOf<class UUserWidget> _invenClass;
 
 
 
 	
-	UFUNCTION()
-		bool AddmyItem(class AMyItem* Item);
-
-	UFUNCTION()
-		void DropmyItem();
 
 	DelegateTestTwoParams _myDelegate3;
 

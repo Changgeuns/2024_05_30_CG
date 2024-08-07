@@ -7,6 +7,10 @@
 #include "MyStatComponent.h"
 #include "MyGameInstance.generated.h"
 
+class AMyUIManager;
+
+#define UIManager Cast<UMyGameInstance>(GetGameInstance())->GetUIManager()
+
 /**
  * 
  */
@@ -21,8 +25,13 @@ public:
 
 	FMyStatData* GetStatDataByLevel(int level);
 
+	AMyUIManager* GetUIManager() { return _uiManager; }
+
 private:
 
 	UPROPERTY()
 	class UDataTable* _statTable;
+
+	UPROPERTY()
+		AMyUIManager* _uiManager;
 };

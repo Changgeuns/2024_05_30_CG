@@ -2,6 +2,12 @@
 
 
 #include "MyCharacter.h"
+
+// UI
+#include "MyGameInstance.h"
+#include "MyUIManager.h"
+#include "MyInventoryUI.h"
+
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
@@ -17,17 +23,14 @@
 #include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "MyHpBar.h"
-#include "MyInventoryUI.h"
+#include "MyPlayerController.h"
+#include "Components/Button.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	// TODE
-	// skeletal Mesh
-	// 
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> sm
 	(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonPhase/Characters/Heroes/Phase/Meshes/Phase_GDC.Phase_GDC'"));
@@ -70,27 +73,7 @@ AMyCharacter::AMyCharacter()
 	{
 		_hpbarWidget->SetWidgetClass(hpBar.Class);
 	}
-
-	static ConstructorHelpers::FClassFinder<UMyInventoryUI> invenClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MyInventory_BP.MyInventory_BP_C'"));
-
-
-	if (invenClass.Succeeded())
-	{
-		auto temp = invenClass.Class;
-		_invenWidget = CreateWidget<UUserWidget>(GetWorld(), invenClass.Class);
-	}
-
-	//_invenWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Inven"));
-	//_invenWidget->SetWidgetSpace(EWidgetSpace::Screen);
-	//_invenWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	////
-	////
-	//static ConstructorHelpers::FClassFinder<UUserWidget> inven(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MyInventory_BP.MyInventory_BP_C'"));
-	////
-	//if (inven.Succeeded())
-	//{
-	//	_invenWidget->SetWidgetClass(inven.Class);
-	//}
+	
 
 }
 
@@ -101,13 +84,13 @@ void AMyCharacter::BeginPlay()
 
 	Init();
 
-	if (_invenWidget)
+	// TODO : InvenWidget
+	auto invenUI = UIManager->GetInvenUI();
+
+	if (invenUI)
 	{
-		_invenWidget->AddToViewport();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("inven widget did not .."));
+		_InvenCom->_itemAddedEvent.AddUObject(invenUI, &UMyInventoryUI::SetItem);
+		invenUI->DropBtn->OnClicked.AddDynamic(_InvenCom, &UMyItemComponent::DropmyItem);
 	}
 }
 
@@ -134,12 +117,16 @@ void AMyCharacter::PostInitializeComponents()
 		_statCom->_hpChangedDelegate.AddUObject(hpBar, &UMyHpBar::SetHpBarValue);
 	}
 
-	auto invenUI = Cast<UMyInventoryUI>(_invenWidget);
+	// TODO : InvenWidget
+	/*auto invenUI = UIManager->GetInvenUI();
 
 	if (invenUI)
 	{
-		_InvenCom->_itemAddedEvent.AddUObject(invenUI, &UMyInventoryUI::SetItem);
-	}
+		_invenCom->_itemAddedEvent.AddUObject(invenUI, &UMyInventoryUI::SetItem);
+		invenUI->DropBtn->OnClicked.AddDynamic(_invenCom, &UMyInvenComponent::DropItem);
+	}*/
+	// 콘텐츠 브라우져에서 드래그해서 월드에 배치할 경우
+	// 이 함수가 먼저 호출되는 상황
 }
 
 // Called every frame
@@ -230,6 +217,12 @@ void AMyCharacter::AttackHit()
 		// TODE : TakeDamage
 		FDamageEvent damageEvent;
 		hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
+	
+		// TODO : 삭제할 코드... 버튼 실습용
+		if (GetController())
+		{
+			Cast<AMyPlayerController>(GetController())->ShowUI();
+		}
 	}
 	DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
 }
@@ -373,7 +366,7 @@ bool AMyCharacter::AddmyItem(AMyItem* Item)
 
 void AMyCharacter::DropmyItem()
 {
-	_InvenCom->DropmyItem(this); // 인벤컴포
+	_InvenCom->DropTaget(this); // 인벤컴포
 	//AddAttackDamage(this, -20);
 
 
