@@ -8,6 +8,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "MyAIController.h"
 #include "MyCharacter.h"
+#include "MyPlayer.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/OverlapResult.h"
 
@@ -22,14 +23,14 @@ void UBT_Service_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	auto currentPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if(currentPawn == nullptr)
+	if (currentPawn == nullptr)
 		return;
 
 	auto world = GetWorld();
 	FVector center = currentPawn->GetActorLocation();
 	float searchRadius = 500.0f;
 
-	if(world == nullptr)
+	if (world == nullptr)
 		return;
 
 	TArray<FOverlapResult> overLapResult;
@@ -49,21 +50,28 @@ void UBT_Service_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 	{
 		for (auto& result : overLapResult)
 		{
-			auto myCharacter = Cast<AMyCharacter>(result.GetActor());
-			if (myCharacter != nullptr && myCharacter->GetController()->IsPlayerController())
+			auto myCharacter = Cast<AMyPlayer>(result.GetActor());
+
+			if (myCharacter != nullptr)
 			{
-				OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), myCharacter);
-				DrawDebugSphere(world, center, searchRadius, 32, FColor::Red, false, 0.3f);
+				auto myCharacterController = myCharacter->GetController();
+				if (myCharacterController != nullptr && myCharacterController->IsPlayerController())
+				{
+					OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), myCharacter);
+					// DEBUG_SEM : DrawCapsule
+					//DrawDebugSphere(world, center, searchRadius, 32, FColor::Red, false, 0.3f);
+				}
 
 				return;
 			}
 		}
-
-		DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
+		// DEBUG_SEM : DrawCapsule
+		//DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
 	}
 	else
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), nullptr);
-		DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
+		// DEBUG_SEM : DrawCapsule
+		//DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
 	}
 }

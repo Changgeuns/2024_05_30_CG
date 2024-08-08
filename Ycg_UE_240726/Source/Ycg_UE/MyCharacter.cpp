@@ -85,13 +85,13 @@ void AMyCharacter::BeginPlay()
 	Init();
 
 	// TODO : InvenWidget
-	auto invenUI = UIManager->GetInvenUI();
+	/*auto invenUI = UIManager->GetInvenUI();
 
 	if (invenUI)
 	{
 		_InvenCom->_itemAddedEvent.AddUObject(invenUI, &UMyInventoryUI::SetItem);
 		invenUI->DropBtn->OnClicked.AddDynamic(_InvenCom, &UMyItemComponent::DropmyItem);
-	}
+	}*/
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -219,10 +219,10 @@ void AMyCharacter::AttackHit()
 		hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
 	
 		// TODO : 삭제할 코드... 버튼 실습용
-		if (GetController())
+		/*if (GetController())
 		{
 			Cast<AMyPlayerController>(GetController())->ShowUI();
-		}
+		}*/
 	}
 	DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
 }

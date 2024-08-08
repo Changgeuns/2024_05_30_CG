@@ -30,10 +30,22 @@
     <Filter Include="Source\Ycg_UE">
       <UniqueIdentifier>{9B8CD475-B284-3C3C-94B0-7FB0441ED64F}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Ycg_UE\BT_Task_FindRandomPos.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\BT_Task_FindRandomPos.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyActor.cpp">
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
     <ClInclude Include="..\..\Source\Ycg_UE\MyActor.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyAIController.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyAIController.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyAnimInstance.cpp">

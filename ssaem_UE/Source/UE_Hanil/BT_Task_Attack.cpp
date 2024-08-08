@@ -8,6 +8,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "MyAIController.h"
 #include "MyCharacter.h"
+#include "MyMonster.h"
+#include "MyPlayer.h"
 
 UBT_Task_Attack::UBT_Task_Attack()
 {
@@ -18,7 +20,7 @@ EBTNodeResult::Type UBT_Task_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 {
 	EBTNodeResult::Type result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	auto character = Cast<AMyCharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	auto character = Cast<AMyMonster>(OwnerComp.GetAIOwner()->GetPawn());
 	if(character == nullptr)
 		return EBTNodeResult::Failed;
 
@@ -30,6 +32,7 @@ EBTNodeResult::Type UBT_Task_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 	{
 		this->_isAttacking = false;
 	});
+
 
 	return result;
 }
