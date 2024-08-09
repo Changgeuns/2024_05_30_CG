@@ -8,12 +8,7 @@
 #include "MyUIManager.h"
 #include "MyInventoryUI.h"
 
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputActionValue.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
 #include "MyAnimInstance.h"
 #include "Engine/DamageEvents.h" 
 #include "Math/UnrealMathUtility.h"
@@ -25,6 +20,9 @@
 #include "MyHpBar.h"
 #include "MyPlayerController.h"
 #include "Components/Button.h"
+
+// AI
+#include "MyAIController.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -42,30 +40,23 @@ AMyCharacter::AMyCharacter()
 
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
 
-	_springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	_camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-
-	// 상속관계 설정
-	_springArm->SetupAttachment(GetCapsuleComponent());
-	_camera->SetupAttachment(_springArm);
-
-	_springArm->TargetArmLength = 500.0f;
-	_springArm->SetRelativeRotation(FRotator(-35.0f, 0.0f, 0.0f));
-
 	RootComponent = GetCapsuleComponent();
 
 	//Stat
 	_statCom = CreateDefaultSubobject<UMyStatComponent>(TEXT("Stat"));
+	_statCom->_deathDelegate.AddLambda([this]()-> void { this->GetController()->UnPossess(); });
 
 	// Inventory
 	//_InventoryCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("Inventory1"));
 
-	_InvenCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("InvenCom"));
 
 	_hpbarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBaa"));
 	_hpbarWidget->SetupAttachment(GetMesh());
 	_hpbarWidget->SetWidgetSpace(EWidgetSpace::Screen);
 	_hpbarWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 230.0f));
+
+	_InvenCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("InvenCom"));
+	
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> hpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MyHpBar_BP.MyHpBar_BP_C'"));
 
@@ -81,6 +72,7 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 
 	Init();
 
@@ -107,7 +99,7 @@ void AMyCharacter::PostInitializeComponents()
 		_animInstance->_deathDelegate.AddUObject(this, &AMyCharacter::Disable);
 	}
 
-	_statCom->SetLevelAndInit(_level);
+	_statCom->SetLevelAndInit(1);
 
 	_hpbarWidget->InitWidget();
 	auto hpBar = Cast<UMyHpBar>(_hpbarWidget->GetUserWidgetObject());
@@ -129,37 +121,7 @@ void AMyCharacter::PostInitializeComponents()
 	// 이 함수가 먼저 호출되는 상황
 }
 
-// Called every frame
-void AMyCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
-
-// Called to bind functionality to input
-void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		// Moving
-		EnhancedInputComponent->BindAction(_moveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);
-
-		// Looking
-		EnhancedInputComponent->BindAction(_lookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
-
-		// Jumping
-		EnhancedInputComponent->BindAction(_jumpAction, ETriggerEvent::Started, this, &AMyCharacter::JumpA);
-
-		// Attacks
-		EnhancedInputComponent->BindAction(_AttackAction, ETriggerEvent::Started, this, &AMyCharacter::AttackA);
-
-		// ItemDrop
-		EnhancedInputComponent->BindAction(_ItemDropAction, ETriggerEvent::Started, this, &AMyCharacter::DropmyItem);
-
-	}
-}
 
 float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -178,6 +140,7 @@ float AMyCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 void AMyCharacter::onAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	_isAttcking = false;
+	_attackEndedDelegate.Broadcast();
 }
 
 void AMyCharacter::AttackHit()
@@ -190,15 +153,16 @@ void AMyCharacter::AttackHit()
 
 	float attackRange = 500.0f;
 	float attackRadius = 100.0f;
+	FQuat quat = FQuat::Identity;
 
 	bool bResult = GetWorld()->SweepSingleByChannel
 	(
 		hitResult,
 		GetActorLocation(),
 		GetActorLocation() + GetActorForwardVector() * attackRange,
-		FQuat::Identity,
+		quat,
 		ECollisionChannel::ECC_GameTraceChannel2,
-		FCollisionShape::MakeSphere(attackRadius),
+		FCollisionShape::MakeCapsule(attackRadius, attackRange),
 		params
 	);
 
@@ -224,8 +188,10 @@ void AMyCharacter::AttackHit()
 			Cast<AMyPlayerController>(GetController())->ShowUI();
 		}*/
 	}
-	DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
+	// DEBUG : 범위
+	//DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
 }
+
 
 
 void AMyCharacter::AddAttackDamage(AActor* actor, int amount)
@@ -235,63 +201,19 @@ void AMyCharacter::AddAttackDamage(AActor* actor, int amount)
 	_statCom->AddAttackDamage(amount);
 }
 
-void AMyCharacter::Move(const FInputActionValue& value)
-{
-	FVector2D MovementVector = value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		_vertical = MovementVector.Y;
-		_Horizontal = MovementVector.X;
-
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-		AddMovementInput(GetActorRightVector(), MovementVector.X);
-	}
-}
-
-void AMyCharacter::Look(const FInputActionValue& value)
-{
-	FVector2D LookAxisVector = value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		AddControllerYawInput(LookAxisVector.X);
-	}
-}
-
-void AMyCharacter::JumpA(const FInputActionValue& value)
-{
-	bool isPressed = value.Get<bool>();
-
-	if (isPressed)
-	{
-		ACharacter::Jump();
-	}
-}
-
-void AMyCharacter::AttackA(const FInputActionValue& value)
-{
-	bool isPressed = value.Get<bool>();
-
-	if (isPressed && _isAttcking == false && _animInstance != nullptr)
-	{
-		//auto myAniml = GetMesh()->GetAnimInstance();
-		_animInstance->PlayAttackMontage();
-		_isAttcking = true;
-
-		_curAttackIndex %= 4;
-		_curAttackIndex++;
-
-		_animInstance->JumpToSection(_curAttackIndex);
-	}
-}
-
 void AMyCharacter::Init()
 {
 	_statCom->Reset();
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 	PrimaryActorTick.bCanEverTick = true;
+
+	if (_aiController && GetController() == nullptr)
+	{
+		auto aI_Controller = Cast<AMyAIController>(_aiController);
+		if (aI_Controller)
+			aI_Controller->Possess(this);
+	}
 }
 
 void AMyCharacter::Disable()
@@ -300,32 +222,7 @@ void AMyCharacter::Disable()
 	SetActorEnableCollision(false);
 	PrimaryActorTick.bCanEverTick = false;
 
-	//_InventoryCom->DeadAllDropItem();// 인벤 컴포
-	//if (!Inventory.IsEmpty())
-	//{
-	//	// 인벤토리 내 모든 아이템을 드랍
-	//	for (AMyItem* Item : Inventory)
-	//	{
-	//		if (Item)
-	//		{
-	//			// 아이템의 위치를 캐릭터의 현재 위치로 설정
-	//			FVector DropLocation = GetActorLocation();
-	//			float rand_X = FMath::RandRange(-2, 2);
-	//			float rand_Y = FMath::RandRange(-2, 2);
-	//			// 램덤한값을 더해서 아이템이 겹치는걸 어느정도 예방
-	//			DropLocation += FVector(rand_X * 50, rand_Y * 50, 0);
-	////
-	//			Item->SetActorLocation(DropLocation);
-	//			Item->SetActorHiddenInGame(false);
-	//			Item->SetActorEnableCollision(true);
-	////
-	//			UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *Item->GetName());
-	//		}
-	//	}
-	////
-	//	// 인벤토리 비우기
-	//	Inventory.Empty();
-	//}
+	
 }
 
 bool AMyCharacter::AddmyItem(AMyItem* Item)

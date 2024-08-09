@@ -25,10 +25,7 @@
 #include "MyAIController.h"
 
 // Particle
-#include "Particles/ParticleSystem.h"
-#include "Particles/ParticleSystemComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Engine/World.h"
+#include "MyEffectManager.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -69,12 +66,7 @@ AMyCharacter::AMyCharacter()
 
 	APawn::AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> PT(TEXT("/Script/Engine.ParticleSystem'/Game/ParagonNarbash/FX/Particles/Skins/BashOLantern/Abilities/Primary/P_BashOLantern_Melee_Impact.P_BashOLantern_Melee_Impact'"));
-	
-	if (PT.Succeeded())
-	{
-		_particle = PT.Object;
-	}
+
 }
 
 // Called when the game starts or when spawned
@@ -158,12 +150,13 @@ void AMyCharacter::AttackHit()
 		drawColor = FColor::Red;
 		FDamageEvent damageEvent;
 		hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
+		_hitPoint = hitResult.ImpactPoint;
 
-		FVector hitPoint = hitResult.ImpactPoint;
-		if (_particle)
-		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), _particle, hitPoint, FRotator::ZeroRotator);
-		}
+		//_attackHitEvent.Broadcast();
+		EffectManager->Play("meleeAttack", _hitPoint);
+
+		//FVector hitPoint = hitResult.ImpactPoint;
+		
 	}
 	//DrawDebugSphere(GetWorld(), center, attackRadius, 12, drawColor,false, 2.0f);
 

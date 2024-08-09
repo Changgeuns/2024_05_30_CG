@@ -30,6 +30,24 @@
     <Filter Include="Source\Ycg_UE">
       <UniqueIdentifier>{9B8CD475-B284-3C3C-94B0-7FB0441ED64F}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Ycg_UE\BT_Deco_CanAttack.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\BT_Deco_CanAttack.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\BT_Service_FindTarget.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\BT_Service_FindTarget.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\BT_Task_Attack.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\BT_Task_Attack.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\BT_Task_FindRandomPos.cpp">
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
@@ -96,10 +114,22 @@
     <ClInclude Include="..\..\Source\Ycg_UE\MyItemComponent.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyMonster.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyMonster.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyPawn.cpp">
       <Filter>Source\Ycg_UE</Filter>
     </ClCompile>
     <ClInclude Include="..\..\Source\Ycg_UE\MyPawn.h">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyPlayer.cpp">
+      <Filter>Source\Ycg_UE</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyPlayer.h">
       <Filter>Source\Ycg_UE</Filter>
     </ClInclude>
     <ClCompile Include="..\..\Source\Ycg_UE\MyPlayerController.cpp">

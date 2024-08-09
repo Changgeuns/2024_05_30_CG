@@ -257,6 +257,18 @@
     <None Include="..\..\Config\DefaultEngine.ini"/>
     <None Include="..\..\Config\DefaultGame.ini"/>
     <None Include="..\..\Config\DefaultInput.ini"/>
+    <ClCompile Include="..\..\Source\Ycg_UE\BT_Deco_CanAttack.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\BT_Deco_CanAttack.h"/>
+    <ClCompile Include="..\..\Source\Ycg_UE\BT_Service_FindTarget.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\BT_Service_FindTarget.h"/>
+    <ClCompile Include="..\..\Source\Ycg_UE\BT_Task_Attack.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\BT_Task_Attack.h"/>
     <ClCompile Include="..\..\Source\Ycg_UE\BT_Task_FindRandomPos.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -301,10 +313,18 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClInclude Include="..\..\Source\Ycg_UE\MyItemComponent.h"/>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyMonster.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyMonster.h"/>
     <ClCompile Include="..\..\Source\Ycg_UE\MyPawn.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClInclude Include="..\..\Source\Ycg_UE\MyPawn.h"/>
+    <ClCompile Include="..\..\Source\Ycg_UE\MyPlayer.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Ycg_UE\MyPlayer.h"/>
     <ClCompile Include="..\..\Source\Ycg_UE\MyPlayerController.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
