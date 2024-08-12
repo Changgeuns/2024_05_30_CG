@@ -58,7 +58,7 @@ AMyCharacter::AMyCharacter()
 	_InvenCom = CreateDefaultSubobject<UMyItemComponent>(TEXT("InvenCom"));
 	
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> hpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/UI/MyHpBar_BP.MyHpBar_BP_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> hpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/BluePrint/UI/MyHpBar_BP.MyHpBar_BP_C'"));
 
 	if (hpBar.Succeeded())
 	{
@@ -189,7 +189,7 @@ void AMyCharacter::AttackHit()
 		}*/
 	}
 	// DEBUG : 범위
-	//DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
+	DrawDebugSphere(GetWorld(), center, attackRadius, 36, drawColor, false, 2.0f);
 }
 
 

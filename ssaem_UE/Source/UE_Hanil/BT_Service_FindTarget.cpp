@@ -59,19 +59,19 @@ void UBT_Service_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 				{
 					OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), myCharacter);
 					// DEBUG_SEM : DrawCapsule
-					//DrawDebugSphere(world, center, searchRadius, 32, FColor::Red, false, 0.3f);
+					DrawDebugSphere(world, center, searchRadius, 32, FColor::Red, false, 0.3f);
 				}
 
 				return;
 			}
 		}
 		// DEBUG_SEM : DrawCapsule
-		//DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
+		DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
 	}
 	else
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), nullptr);
 		// DEBUG_SEM : DrawCapsule
-		//DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
+		DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
 	}
 }

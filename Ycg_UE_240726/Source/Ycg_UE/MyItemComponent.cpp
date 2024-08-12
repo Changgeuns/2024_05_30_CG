@@ -86,7 +86,7 @@ void UMyItemComponent::DropmyItem()
 		playerPos.Z = GetOwner()->GetActorLocation().Z;
 		FVector itemPos = playerPos + FVector(X, Y, 0);
 		ItemToDrop->SetItemPos(itemPos);
-		player_this->AddAttackDamage(player_this, -10);
+		player_this->AddAttackDamage(player_this, -20);
 
 		UE_LOG(LogTemp, Log, TEXT("아이템 드랍: %s"), *ItemToDrop->GetName());
 	}

@@ -161,7 +161,7 @@ void AMyCharacter::AttackHit()
 	//DrawDebugSphere(GetWorld(), center, attackRadius, 12, drawColor,false, 2.0f);
 
 	// DEBUG_SEM : DrawCapsule
-	//DrawDebugCapsule(GetWorld(), center, attackRange * 0.5f, attackRadius, quat, drawColor,false,2.0f);
+	DrawDebugCapsule(GetWorld(), center, attackRange * 0.5f, attackRadius, quat, drawColor,false,2.0f);
 
 }
 

@@ -69,7 +69,7 @@ public:
 		float _vertical = 0.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		float _Horizontal = 0.0f;
+		float _horizontal = 0.0f;
 
 
 public:

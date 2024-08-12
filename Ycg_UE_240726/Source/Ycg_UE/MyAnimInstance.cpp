@@ -31,7 +31,7 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSecinds)
 		_speed = MyCharacter->GetVelocity().Size();
 		_isFalling = MyCharacter->GetMovementComponent()->IsFalling();
 		_vertical = _vertical + (MyCharacter->_vertical - _vertical) * (DeltaSecinds);
-		_horizontal = _horizontal + (MyCharacter->_Horizontal - _horizontal) * (DeltaSecinds);
+		_horizontal = _horizontal + (MyCharacter->_horizontal - _horizontal) * (DeltaSecinds);
 		_isDeed = (MyCharacter->GetCurHp() <= 0);
 	}
 }
