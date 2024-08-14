@@ -7,7 +7,7 @@
 #include "MyAnimInstance.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(AttackDelegate);
-DECLARE_MULTICAST_DELEGATE(DeedthDelegate);
+DECLARE_MULTICAST_DELEGATE(DeadthDelegate);
 
 /**
  * 
@@ -32,17 +32,17 @@ public:
 	void AnimNotify_AttackHit();
 
 	UFUNCTION()
-	void AnimNotify_Deedth();
+	void AnimNotify_Deadth();
 
 	AttackDelegate _attackDelegate;
-	DeedthDelegate _deathDelegate;
+	DeadthDelegate _deathDelegate;
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		float _speed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		bool _isFalling;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
-		bool _isDeed = false;
+		bool _isDead = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 		float _vertical;

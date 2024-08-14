@@ -153,7 +153,7 @@ void AMyCharacter::AttackHit()
 		_hitPoint = hitResult.ImpactPoint;
 
 		//_attackHitEvent.Broadcast();
-		EffectManager->Play("meleeAttack", _hitPoint);
+		EffectManager->Play("Explosion", _hitPoint);
 
 		//FVector hitPoint = hitResult.ImpactPoint;
 		

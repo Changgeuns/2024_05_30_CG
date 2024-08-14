@@ -32,7 +32,7 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSecinds)
 		_isFalling = MyCharacter->GetMovementComponent()->IsFalling();
 		_vertical = _vertical + (MyCharacter->_vertical - _vertical) * (DeltaSecinds);
 		_horizontal = _horizontal + (MyCharacter->_horizontal - _horizontal) * (DeltaSecinds);
-		_isDeed = (MyCharacter->GetCurHp() <= 0);
+		_isDead = (MyCharacter->GetCurHp() <= 0);
 	}
 }
 
@@ -76,7 +76,7 @@ void UMyAnimInstance::AnimNotify_AttackHit()
 	_attackDelegate.Broadcast();
 }
 
-void UMyAnimInstance::AnimNotify_Deedth()
+void UMyAnimInstance::AnimNotify_Deadth()
 {
 	_deathDelegate.Broadcast();
 }
