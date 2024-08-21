@@ -23,14 +23,14 @@ void UBT_Service_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	auto currentPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (currentPawn == nullptr)
+	if(currentPawn == nullptr)
 		return;
 
 	auto world = GetWorld();
 	FVector center = currentPawn->GetActorLocation();
 	float searchRadius = 500.0f;
 
-	if (world == nullptr)
+	if(world == nullptr)
 		return;
 
 	TArray<FOverlapResult> overLapResult;
@@ -58,20 +58,21 @@ void UBT_Service_FindTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 				if (myCharacterController != nullptr && myCharacterController->IsPlayerController())
 				{
 					OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), myCharacter);
-					// DEBUG_SEM : DrawCapsule
-					DrawDebugSphere(world, center, searchRadius, 32, FColor::Red, false, 0.3f);
+					// DEBUG_Hanil
+					//DrawDebugSphere(world, center, searchRadius, 32, FColor::Red, false, 0.3f);
 				}
 
 				return;
 			}
 		}
-		// DEBUG_SEM : DrawCapsule
-		DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
+
+		// DEBUG_Hanil
+		// DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
 	}
 	else
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), nullptr);
-		// DEBUG_SEM : DrawCapsule
-		DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
+		// DEBUG_Hanil
+		// DrawDebugSphere(world, center, searchRadius, 32, FColor::Green, false, 0.3f);
 	}
 }

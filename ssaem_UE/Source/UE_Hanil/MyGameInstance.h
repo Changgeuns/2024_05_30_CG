@@ -35,10 +35,9 @@ private:
 	UPROPERTY()
 	class UDataTable* _statTable;
 
-	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true" ))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	AMyUIManager* _uiManager;
 
-	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true" ))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	AMyEffectManager* _effectManager;
-
 };

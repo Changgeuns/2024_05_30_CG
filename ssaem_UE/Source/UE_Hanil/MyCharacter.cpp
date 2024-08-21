@@ -27,6 +27,9 @@
 // Particle
 #include "MyEffectManager.h"
 
+// Projectile
+#include "MyProjectile.h"
+
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
@@ -49,7 +52,7 @@ AMyCharacter::AMyCharacter()
 
 	// Stat
 	_statCom = CreateDefaultSubobject<UMyStatComponent>(TEXT("Stat"));
-	
+
 	_hpbarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBar"));
 	_hpbarWidget->SetupAttachment(GetMesh());
 	_hpbarWidget->SetWidgetSpace(EWidgetSpace::Screen);
@@ -65,8 +68,6 @@ AMyCharacter::AMyCharacter()
 	}
 
 	APawn::AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-
-
 }
 
 // Called when the game starts or when spawned
@@ -117,19 +118,29 @@ void AMyCharacter::OnAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 
 void AMyCharacter::AttackHit()
 {
+	// Projectile Test
+	// TODO : Projectile Skill...
+	if (_projectileClass)
+	{
+		FVector forward = GetActorForwardVector();
+		FVector fireLocation = GetActorLocation() + forward * 150;
+
+		auto projectile = GetWorld()->SpawnActor<AMyProjectile>(_projectileClass, fireLocation, FRotator::ZeroRotator);
+		projectile->FireInDirection(forward);
+	}
+
+	// Attack Chanel
 	FHitResult hitResult;
 	FCollisionQueryParams params(NAME_None, false,this);
 
 	float attackRange = 1000.0f;
-	float attackRadius = 30.0f;
+	float attackRadius = 20.0f;
 	FVector forward = GetActorForwardVector();
-	//FQuat quat = FRotationMatrix::MakeFromZ(forward).ToQuat();
-	FQuat quat = FQuat::FindBetweenVectors(FVector(0, 0, 1), forward);
+	FQuat quat = FQuat::FindBetweenVectors(FVector(0,0,1), forward);
 
 	FVector center = GetActorLocation() + forward * attackRange * 0.5f;
 	FVector start = GetActorLocation();
 	FVector end = start + forward * (attackRange * 0.5f);
-
 
 	bool bResult = GetWorld()->SweepSingleByChannel
 	(
@@ -141,7 +152,6 @@ void AMyCharacter::AttackHit()
 	FCollisionShape::MakeCapsule(attackRadius, attackRange * 0.5f),
 	params
 	);
-
 	
 	FColor drawColor = FColor::Green;
 
@@ -154,15 +164,9 @@ void AMyCharacter::AttackHit()
 
 		//_attackHitEvent.Broadcast();
 		EffectManager->Play("Explosion", _hitPoint);
-
-		//FVector hitPoint = hitResult.ImpactPoint;
-		
 	}
-	//DrawDebugSphere(GetWorld(), center, attackRadius, 12, drawColor,false, 2.0f);
-
-	// DEBUG_SEM : DrawCapsule
-	DrawDebugCapsule(GetWorld(), center, attackRange * 0.5f, attackRadius, quat, drawColor,false,2.0f);
-
+	// DEBUG_Hanil : DrawCapsule
+	// DrawDebugCapsule(GetWorld(), center, attackRange * 0.5f, attackRadius, quat, drawColor,false,2.0f);
 }
 
 void AMyCharacter::AddAttackDamage(AActor* actor, int amount)
@@ -188,9 +192,9 @@ void AMyCharacter::Init()
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 	PrimaryActorTick.bCanEverTick = true;
-
-	_statCom->_deathDelegate.AddLambda([this]()-> void { this->GetController()->UnPossess(); });
 	
+	_statCom->_deathDelegate.AddLambda([this]()-> void { this->GetController()->UnPossess(); });
+
 	if (_aiController && GetController() == nullptr)
 	{
 		auto aI_Controller = Cast<AMyAIController>(_aiController);

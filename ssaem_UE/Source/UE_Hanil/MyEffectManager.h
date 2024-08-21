@@ -20,12 +20,10 @@ public:
 protected:
 	void CreateParticleClass(FString name, FString path);
 
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void CreateEffect();
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,4 +37,7 @@ private:
 	TMap<FString, TSubclassOf<AMyEffect>> _classTable;
 
 	TMap<FString, TArray<AMyEffect*>> _effectTable;
+
+	UPROPERTY()
+	class USceneComponent* _rootComponent;
 };

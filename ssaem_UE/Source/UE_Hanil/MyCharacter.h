@@ -41,7 +41,7 @@ public:
 	void OnAttackEnded(class UAnimMontage* Montage, bool bInterrupted);
 
 	UFUNCTION()
-	void AttackHit();
+	virtual void AttackHit();
 
 	// Stat 관련
 	int GetCurHp() { return _statCom->GetCurHp(); }
@@ -52,8 +52,9 @@ public:
 	
 	Delegate_AttackEnded _attackEndedDelegate;
 
-	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = Event, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintAssignable, Category = Event, meta = (AllowPrivateAccess = "true"))
 	FDelegate_AttackHit _attackHitEvent;
+	
 protected:
 	virtual void Init();
 
@@ -72,7 +73,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float _horizontal = 0.0f;
 
-	// Attack Hit Point
+	// AttackHitPoint
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AttackHit, meta = (AllowPrivateAccess = "true"))
 	FVector _hitPoint;
 
@@ -92,7 +93,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI, meta = (AllowPrivateAccess = "true"))
 	class AAIController* _aiController;
 
-
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AMyProjectile> _projectileClass;
 };

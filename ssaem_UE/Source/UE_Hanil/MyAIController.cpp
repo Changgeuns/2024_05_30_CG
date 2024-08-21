@@ -35,7 +35,7 @@ void AMyAIController::OnPossess(APawn* InPawn)
 	{
 		if (RunBehaviorTree(_bt))
 		{
-			blackBoarComponent->SetValueAsVector(FName("FixedPos"), InPawn->GetActorLocation());
+			blackBoarComponent->SetValueAsVector(FName(TEXT("FixedPos")), InPawn->GetActorLocation());
 			UE_LOG(LogTemp, Log, TEXT("Behavior Tree Succeeded"));
 		}
 	}

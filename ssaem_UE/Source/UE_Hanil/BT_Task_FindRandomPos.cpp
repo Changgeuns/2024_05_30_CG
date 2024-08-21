@@ -29,9 +29,8 @@ EBTNodeResult::Type UBT_Task_FindRandomPos::ExecuteTask(UBehaviorTreeComponent& 
 
 	FNavLocation randLocation;
 
-	FVector  fixedPos = OwnerComp.GetBlackboardComponent()->GetValueAsVector(FName(TEXT("FixedPos")));
-
-	//UE_LOG(LogTemp, Error, TEXT("%s 's Pos: %s"), currentpawn->GetName(), fixedPos.ToString());
+	FVector fixedPos = OwnerComp.GetBlackboardComponent()->GetValueAsVector(FName(TEXT("FixedPos")));
+	UE_LOG(LogTemp, Error, TEXT("%s 's Pos : %s"), *currentPawn->GetName(), *fixedPos.ToString());
 
 	if (naviSystem->GetRandomPointInNavigableRadius(fixedPos, 500.0f, randLocation))
 	{
@@ -40,5 +39,4 @@ EBTNodeResult::Type UBT_Task_FindRandomPos::ExecuteTask(UBehaviorTreeComponent& 
 	}
 
 	return result;
-
 }

@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "MyEffect.generated.h"
 
-
 UCLASS()
 class UE_HANIL_API AMyEffect : public AActor
 {
@@ -25,18 +24,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void Play(FVector location, FRotator rotator);
-	
+
 	bool IsPlaying();
 
 	UFUNCTION()
 	void End(class UParticleSystemComponent* particle);
+	UFUNCTION()
 	void EndNiagara(class UNiagaraComponent* particle);
 
-
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UParticleSystemComponent* _particleCom;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		class UNiagaraComponent* _niagaraCom;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UNiagaraComponent* _niagaraCom;
 };

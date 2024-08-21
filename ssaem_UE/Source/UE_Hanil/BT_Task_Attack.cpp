@@ -33,7 +33,6 @@ EBTNodeResult::Type UBT_Task_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 		this->_isAttacking = false;
 	});
 
-
 	return result;
 }
 

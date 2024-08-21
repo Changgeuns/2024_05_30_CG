@@ -14,16 +14,14 @@ AMyEffect::AMyEffect()
 	PrimaryActorTick.bCanEverTick = false;
 
 	// Actor => SpawnWorld
-	// Component => CreateDefaultSubobject
-	// UObeject => NewObeject<T> => 프로그래머가 직접 지워줘야함
+	// Component = > CreateDefaultSubObject
+	// UObeject => NewObejct<T> =>  프로그래머가 직접 지워줘야함
 
 	_particleCom = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
 	RootComponent = _particleCom;
 
 	_niagaraCom = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Niagara"));
 	_niagaraCom->SetupAttachment(RootComponent);
-
-	//_particleCom->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -32,7 +30,6 @@ void AMyEffect::BeginPlay()
 	Super::BeginPlay();
 
 	
-
 	_particleCom->OnSystemFinished.AddDynamic(this, &AMyEffect::End);
 	End(_particleCom);
 
@@ -49,7 +46,7 @@ void AMyEffect::Tick(float DeltaTime)
 
 void AMyEffect::Play(FVector location, FRotator rotator)
 {
-	if (_particleCom->IsActive() && _niagaraCom->IsActive()) 
+	if(_particleCom->IsActive() || _niagaraCom->IsActive())
 		return;
 
 	SetActorLocationAndRotation(location, rotator);
@@ -57,28 +54,26 @@ void AMyEffect::Play(FVector location, FRotator rotator)
 	_niagaraCom->ActivateSystem();
 }
 
-
 bool AMyEffect::IsPlaying()
 {
-	if (_particleCom->IsActive()) 
-		return true;
-	if (_niagaraCom->IsActive())
+	if(_particleCom->IsActive())
 		return true;
 
+	if(_niagaraCom->IsActive())
+		return true;
 
 	return false;
 }
 
-
 void AMyEffect::End(UParticleSystemComponent* particle)
 {
-	if (particle)
-	particle->DeactivateSystem();
-
+	if(particle)
+		particle->DeactivateSystem();
 }
 
 void AMyEffect::EndNiagara(UNiagaraComponent* particle)
 {
 	if(particle)
-	particle->Deactivate();
+		particle->Deactivate();
 }
+
