@@ -90,6 +90,7 @@ void AMyCharacter::PostInitializeComponents()
 		_animInstance->_deathDelegate.AddUObject(this, &AMyCharacter::Disable);
 	}
 
+	// 이부분은 필요한가? 싶긴함
 	_statCom->SetLevelAndInit(1);
 
 	_hpbarWidget->InitWidget();
