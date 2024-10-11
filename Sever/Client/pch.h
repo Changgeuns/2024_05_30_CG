@@ -3,9 +3,10 @@
 #define WIN32_LEAN_AND_MEAN
 
 #ifdef _DEBUG
-#pragma comment(lib, "Debug\\severCore.lib")
+#pragma comment(lib,"Debug\\ServerCore.lib")
 #else
-#pragma comment(lib, "Release\\severCore.lib")
+#pragma comment(lib,"Release\\ServerCore.lib")
 #endif
+
 
 #include "CorePch.h"
