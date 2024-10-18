@@ -12,6 +12,7 @@
 #include "Lock.h"
 #include "RefCounting.h"
 
+
 // window
 // linux
 //
@@ -592,22 +593,79 @@
 #pragma endregion
 
 #pragma region 열일곱번쨰
-using PlayerRef = TSharedPtr<class Player>;
+//using PlayerRef = shared_ptr<class Player>;
+//using InventoryRef = shared_ptr<class Inventory>;
+//
+//class Player : public RefCountable
+//{
+//public:
+//    Player() : _hp(0), _atk(0) { }
+//    ~Player() 
+//    {
+//    
+//    }
+//
+//    void Attack()
+//    {
+//        if (_target != nullptr)
+//        {
+//            _target->_hp -= _atk;
+//        }
+//    }
+//
+//    bool IsDead()
+//    {
+//        return _hp <= 0;
+//    }
+//
+//public:
+//    PlayerRef _target;
+//    weak_ptr<Inventory> _inven;
+//
+//    int _hp;
+//    int _atk;
+//};
+//
+//class Inventory : public RefCountable
+//{
+//public:
+//    Inventory(PlayerRef p) : _owner(p) {}//: _owner(**p) {} // 스마트포인터의 참조카운트를 올리지 않으면서 참조
+//
+//    void OpenInven()
+//    {
+//        if (_owner.expired() == false)
+//        {
+//            auto ptr = _owner.lock();
+//            if (ptr != nullptr)
+//                cout << ptr->_hp << ptr->_atk << endl;
+//        }
+//    }
+//
+//private:
+//    weak_ptr<Player> _owner;
+//
+//};
+
+#pragma endregion
+
+#pragma region 열여덟번쨰
+
+using PlayerRef = shared_ptr<class Player>;
 
 class Player : public RefCountable
 {
 public:
-    ~Player() 
-    {
-    
+    Player() : _hp(0), _atk(0)
+    { 
+        cout << "생성자 호출" << endl;
     }
-
-    void Attack()
+    Player(int hp, int atk) : _hp(hp), _atk(atk)
     {
-        if (_target != nullptr)
-        {
-            _target->_hp -= _atk;
-        }
+        cout << "타입변환 생성자 호출 " << endl;
+    }
+    ~Player()
+    {
+        cout << "소멸자 호출" << endl;
     }
 
     bool IsDead()
@@ -616,60 +674,179 @@ public:
     }
 
 public:
-    PlayerRef _target;
 
     int _hp;
     int _atk;
 };
 
+class Knight : public Player
+{
+public:
+    int _stamina = 0;
+};
 
+// 선수지식
+// - 허상포인터로 인한 메모리 오염
+// - 가상메모리와 물리적메모리
+// - 사실 new delete는 바로바로 일을 해준것이 아니었다 => delete가 실제로 바로 삭제하는게 아니였다.
+// => 허상포인터에 데이터를 수정할수 있었다.
+// Stomp Allocator 의 의미
+// 1. DEBUG 환경에서 메모리 오염 방지
+// 2. DEBUG 환경에서 다운캐스팅 후 메모리 오버플로우 방지
 #pragma endregion
 
-#pragma region 열여덟번쨰
-
-#pragma endregion
 int main()
 {
-#pragma region 열여덟번쨰
+
+    CoreGlobal::Create();
+
+    Vector<Knight*> t;
+
+    MemoryPool temp(100);
+
+    MemoryHeader* header = temp.Pop();
+    Knight* k = reinterpret_cast<Knight*>(MemoryHeader::AttachHeader(header, sizeof(Knight)));
+
+    k->_hp = 0;
+    k->_atk = 1;
+    k->_stamina = 2;
+
+    for (int i = 0; i < 10; i++)
+    {
+        t.push_back(xnew<Knight>());
+    }
+    
+    for (auto k : t)
+    {
+        xdelete<Knight>(k);
+    }
+
+    CoreGlobal::Delete();
+    
+    return 0;
+
+#pragma region 열여덟번쨰_가상메모리 운영체제 이론
+
+    //Player* p = new Player();
+
+    ////// 허상 포인터(Dangling Ptr)
+    //p->_atk = 10;
+    //p->_hp = 20;
+
+    //delete p;
+
+    //p->_hp = 50; // 메모리 오염
+    ////// 가상메모리
+    //p = nullptr;
+    //p = new Player(); // 0x0000019B32DC2310
+    
+    //// -- 다른 프로그램 ----
+    //int64* temp = (int64*)(0x0000019B32DC2310);
+    //*temp = 500;
+    //// --------------------
+
+    //// 물리 메모리
+    //
+
+    //// 운영체제 페이징
+    //// 운영체제가 메모리를 할당하고 관리할 떄는 페이지 단위로 관리를 한다.
+    //// 각 프로세스한테 가상메모리를 주고 유저레벨에서 서로 간섭할 수 없게 만든다
+    //// => 물리적 메모리는 영체제가 담당한다.
+
+
+    //SYSTEM_INFO s_info;
+    //::GetSystemInfo(&s_info);
+
+    //s_info.dwPageSize; // 페이지 한 개당 사이즈 4KB
+    //s_info.dwAllocationGranularity; // 메모리를 할당할 때 이 숫자를 배수로 할당이 된다.
+    //
+    //// window API
+    //int* temp = (int*)::VirtualAlloc(nullptr, 4, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+    //*temp = 100;
+
+    //::VirtualFree(temp, 0, MEM_RELEASE);
+
+    ////*temp = 200; // 런타임 에러 바로 남.
+    //// => enw / delete 바로 VirtualAllor, VirtualFree를 바로 해주지 않는다.
+
+    //// 4096 bytes
+    //// [[p2]                          ]
+    //// test
+    //Knight* k = reinterpret_cast<Knight*>(new Player());
+    ////k->_stamina = 100; => 메모리 오버플로우
+    //// std:: new / delete Allocator 경우 상속 구조에서 메모리 오버플로우를 허용하지 않음
+
+    //delete k;
+    //k->_hp = 100;
+
+
+    //Knight* p2 = reinterpret_cast<Knight*>(xnew<Player>());
+    //p2->_stamina = 100; // 메모리 오버플로우 막힘
+
+    //xdelete(p2);
+
+    //vector<int> v;
 
 #pragma endregion
 
 #pragma region 열일곱번쨰
-    CoreGlobal::Create();
 
-    PlayerRef p1 = new Player();
-    p1->ReleaseRef();
-    p1->_hp = 10000;
-    p1->_atk = 15;
+    // shared_ptr
+    // - 참조 카운팅
+    // - 순환 참조 문제
 
-    PlayerRef p2 = new Player();
-    p2->ReleaseRef();
-    p2->_hp = 20000;
-    p2->_atk = 15;
+    // weak_ptr
+    // - Weak Counting 을 한다.
+    // - 순환 참조 문제를 해결하기 위해 쓰이는 ptr
+    // - 생성주기에 관여하지 않는다.
 
-    // shared ptr 의 순환참조 문제
-    p2->_target = p1;
-    //p1->_target = p2;
 
-    TSharedPtr<Player> p3 = TSharedPtr<Player>(new Player());
+    //CoreGlobal::Create();
 
-    while (true)
-    {
-        if (p1 != nullptr)
-        {
-            p2->Attack();
+   // PlayerRef p = make_shared<Player>();
+   // InventoryRef inven = make_shared<Inventory>(p);
+   // p->_inven = inven;
+    // => 순환참조
 
-            if (p2->IsDead())
-            {
-                p1 = nullptr;
-                break;
-            }
-        }
-    }
+    //inven->OpenInven();
 
-    CoreGlobal::Delete();
+    //p->_inven = nullptr;
+    //inven->_owner = nullptr;
+    // 
+    // 
+    //PlayerRef p1 = new Player();
+    //p1->ReleaseRef();
+    //p1->_hp = 10000;
+    //p1->_atk = 15;
 
-    return 0;
+    //PlayerRef p2 = new Player();
+    //p2->ReleaseRef();
+    //p2->_hp = 20000;
+    //p2->_atk = 15;
+
+    //// shared ptr 의 순환참조 문제
+    //p2->_target = p1;
+    ////p1->_target = p2;
+
+    //TSharedPtr<Player> p3 = TSharedPtr<Player>(new Player());
+
+    //while (true)
+    //{
+    //    if (p1 != nullptr)
+    //    {
+    //        p2->Attack();
+
+    //        if (p2->IsDead())
+    //        {
+    //            p1 = nullptr;
+    //            break;
+    //        }
+    //    }
+    //}
+
+    //CoreGlobal::Delete();
+
+    //return 0;
 #pragma endregion
 
 #pragma region 열여섯번쨰
