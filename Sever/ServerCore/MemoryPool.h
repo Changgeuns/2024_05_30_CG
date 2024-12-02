@@ -1,4 +1,5 @@
 #pragma once
+
 struct MemoryHeader
 {
 	MemoryHeader(int32 size) : _allocSize(size) {}
@@ -16,8 +17,7 @@ struct MemoryHeader
 	}
 
 	int32 _allocSize;
-	// TODO : header에 필요한 추가정보
-
+	// TODO : 
 };
 
 class MemoryPool
@@ -36,4 +36,3 @@ private:
 	USE_LOCK;
 	queue<MemoryHeader*> _queue;
 };
-

@@ -1,13 +1,10 @@
 #pragma once
-#include "CoreMacro.h"
 
 class BaseAllocator
 {
 public:
 	static void* Alloc(size_t size);
-	static void Release(void* ptr);
-
-private:
+	static void  Release(void* ptr);
 };
 
 class StompAllocator
@@ -15,10 +12,15 @@ class StompAllocator
 	enum { PAGE_SIZE = 0x1000 };
 
 public:
-	static void*	Alloc(int32 size);
-	static void		Releese(void* ptr);
-private:
+	static void* Alloc(int32 size);
+	static void		Release(void* ptr);
+};
 
+class PoolAllocator
+{
+public:
+	static void* Alloc(int32 size);
+	static void		Release(void* ptr);
 };
 
 template<typename T>
@@ -27,14 +29,14 @@ class STLAllocator
 public:
 	using value_type = T;
 
-	STLAllocator(){}
+	STLAllocator() {}
 
 	template<typename Other>
 	STLAllocator(const STLAllocator<Other>& other) {}
 
 	T* allocate(size_t count)
 	{
-		const int32 size = static_cast<int32> (count * sizeof(value_type));
+		const int32 size = static_cast<int32>(count * sizeof(value_type));
 		return static_cast<T*>(xalloc(size));
 	}
 
@@ -44,5 +46,4 @@ public:
 	}
 
 private:
-
 };

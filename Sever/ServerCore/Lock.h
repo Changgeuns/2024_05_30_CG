@@ -33,8 +33,8 @@ class ReadLockGuard
 {
 public:
 	ReadLockGuard(Lock& lock, const char* name)
-	: _lock(lock), _name(name)
-	{ 
+		: _lock(lock), _name(name)
+	{
 		_lock.ReadLock(_name);
 	}
 

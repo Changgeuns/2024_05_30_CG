@@ -1,17 +1,24 @@
 ﻿#include "pch.h"
 
-#include "AccountManager.h"
-#include "UserManager.h"
+#include <WinSock2.h>
+#include <MSWSock.h>
+#include <WS2tcpip.h>
 
-// Lock based Stack
-// Lock based Queue
-#include "LockBasedQueue.h"
-#include "LockBasedStack.h"
+#pragma comment(lib,"ws2_32.lib")
 
-#include "ThreadManager.h"
-#include "Lock.h"
-#include "RefCounting.h"
+#include "Service.h"
+#include "GameSession.h"
+#include "GameSessionManager.h"
 
+//#include "AccountManager.h"
+//#include "UserManager.h"
+//// Lock based Stack
+//// Lock based Queue
+//#include "LockBasedQueue.h"
+//#include "LockBasedStack.h"
+//#include "ThreadManager.h"
+//#include "Lock.h"
+//#include "RefCounting.h"
 
 // window
 // linux
@@ -650,40 +657,40 @@
 
 #pragma region 열여덟번쨰
 
-using PlayerRef = shared_ptr<class Player>;
-
-class Player : public RefCountable
-{
-public:
-    Player() : _hp(0), _atk(0)
-    { 
-        cout << "생성자 호출" << endl;
-    }
-    Player(int hp, int atk) : _hp(hp), _atk(atk)
-    {
-        cout << "타입변환 생성자 호출 " << endl;
-    }
-    ~Player()
-    {
-        cout << "소멸자 호출" << endl;
-    }
-
-    bool IsDead()
-    {
-        return _hp <= 0;
-    }
-
-public:
-
-    int _hp;
-    int _atk;
-};
-
-class Knight : public Player
-{
-public:
-    int _stamina = 0;
-};
+//using PlayerRef = shared_ptr<class Player>;
+//
+//class Player : public RefCountable
+//{
+//public:
+//    Player() : _hp(0), _atk(0)
+//    { 
+//        cout << "생성자 호출" << endl;
+//    }
+//    Player(int hp, int atk) : _hp(hp), _atk(atk)
+//    {
+//        cout << "타입변환 생성자 호출 " << endl;
+//    }
+//    ~Player()
+//    {
+//        cout << "소멸자 호출" << endl;
+//    }
+//
+//    bool IsDead()
+//    {
+//        return _hp <= 0;
+//    }
+//
+//public:
+//
+//    int _hp;
+//    int _atk;
+//};
+//
+//class Knight : public Player
+//{
+//public:
+//    int _stamina = 0;
+//};
 
 // 선수지식
 // - 허상포인터로 인한 메모리 오염
@@ -695,37 +702,135 @@ public:
 // 2. DEBUG 환경에서 다운캐스팅 후 메모리 오버플로우 방지
 #pragma endregion
 
+//const int32 BuffSize = 1000;
+//
+//struct Session
+//{
+//    SOCKET socket = INVALID_SOCKET;
+//    char recvBuffer[BuffSize] = {}; 
+//    char sendBuffer[100] = "Hello Im Server!!!";
+//    int32 recvBytes = 0;
+//    int32 sendBytes = 0;
+//
+//};
+//
+//enum IO_TYPE
+//{
+//    READ,
+//    WRITE,
+//    ACCEPT,
+//    CONNET
+//};
+//
+//struct OverlappedEx
+//{
+//    WSAOVERLAPPED overlapped = {};
+//    int32 type = 0; 
+//};
+//void WorkerThreadMain(HANDLE iocpHandle)
+//{
+//    while (true)
+//    {
+//        DWORD bytesTranferred = 0;
+//        Session* session = nullptr;
+//        OverlappedEx* overLappedEx = nullptr;
+//
+//        BOOL ret = ::GetQueuedCompletionStatus(iocpHandle, &bytesTranferred, (ULONG_PTR*)&session,
+//            (LPOVERLAPPED*)&overLappedEx, INFINITE);
+//
+//        if (ret == FALSE || bytesTranferred == 0)
+//        {
+//            continue;
+//        }
+//
+//        switch (overLappedEx->type)
+//        {
+//        case IO_TYPE::READ:
+//        {
+//            cout << session->recvBuffer << endl;
+//
+//            WSABUF wsaBuf;
+//            wsaBuf.buf = session->recvBuffer;
+//            wsaBuf.len = BuffSize;
+//
+//            DWORD recvLen = 0;
+//            DWORD flags = 0;
+//            ::WSARecv(session->socket, &wsaBuf, 1, &recvLen, &flags, &overLappedEx->overlapped, NULL);
+//
+//            break;
+//        }
+//        // TODO
+//
+//        default:
+//            break;
+//        }
+//
+//
+//    }
+//}
+
+// GameSession : 서버에서 클라이언트가 접속하면 안내할 식탁
+// GameSessionManager : 모든 클라이언트가 앉아있는 식탁들을 관리하는 수단
+
+
+
 int main()
 {
-
     CoreGlobal::Create();
+    G_GameSessionManager = new GameSessionManager();
 
-    Vector<Knight*> t;
+    shared_ptr<ServerService> service = MakeShared<ServerService>
+        (
+            NetAddress(L"127.0.0.1", 7777),
+            MakeShared<IocpCore>(),
+            MakeShared<GameSession>,
+            100
+        );
 
-    MemoryPool temp(100);
+    service->Start();
 
-    MemoryHeader* header = temp.Pop();
-    Knight* k = reinterpret_cast<Knight*>(MemoryHeader::AttachHeader(header, sizeof(Knight)));
-
-    k->_hp = 0;
-    k->_atk = 1;
-    k->_stamina = 2;
-
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
     {
-        t.push_back(xnew<Knight>());
-    }
-    
-    for (auto k : t)
-    {
-        xdelete<Knight>(k);
+        TM_M->Launch([=]()
+            {
+                while (true)
+                {
+                    service->GetIocpCore()->Dispatch();
+                }
+            });
     }
 
+
+    TM_M->Join();
+
+    //delete G_GameSessionManager;
     CoreGlobal::Delete();
-    
-    return 0;
 
+
+    return 0;
+}
 #pragma region 열여덟번쨰_가상메모리 운영체제 이론
+   /* CoreGlobal::Create();
+
+    for (int32 i = 0; i < 5; i++)
+    {
+        TM_M->Launch([]()->void
+        {
+            while (true)
+            {
+                vector<Knight> v(10);
+
+                Map<int32, Knight> m;
+                m[1] = Knight();
+
+                this_thread::sleep_for(500ms);
+            }
+        });
+    }
+
+    TM_M->Join();
+
+    CoreGlobal::Delete();*/
 
     //Player* p = new Player();
 
@@ -1243,4 +1348,3 @@ int main()
     //t.join();
 #pragma endregion
 
-}

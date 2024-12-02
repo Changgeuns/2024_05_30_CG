@@ -2,9 +2,8 @@
 #include "MemoryPool.h"
 
 MemoryPool::MemoryPool(int32 allocsize)
-	:_allocSize(allocsize)
+	: _allocSize(allocsize)
 {
-
 }
 
 MemoryPool::~MemoryPool()
@@ -38,7 +37,7 @@ MemoryHeader* MemoryPool::Pop()
 		}
 	}
 
-	// 여분이 없다
+	// 여분이 없다.
 	if (header == nullptr)
 	{
 		header = reinterpret_cast<MemoryHeader*>(::malloc(_allocSize));
