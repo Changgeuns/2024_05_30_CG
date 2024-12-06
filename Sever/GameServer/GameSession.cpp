@@ -15,13 +15,50 @@ GameSession::~GameSession()
 
 void GameSession::OnConnected()
 {
-	vector<BuffData> buffs;
-	buffs.push_back({ 1, 48.0f });
-	buffs.push_back({ 2, 2.0f });
 
-	shared_ptr<SendBuffer> sendBuffer = ServerPacketHandler::Make_S_TEST(1234, 10, 5, buffs, L"ChangGeun");
+	/////////////////
+	// Packet Á¦ÀÛ //
+	/////////////////
 
-	G_GameSessionManager->BroadCast(sendBuffer);
+	PKT_S_TEST_WRITE pkt_write(1234, 10, 5);
+	auto buffList = pkt_write.ReserveBuffList(2);
+	auto wCharList = pkt_write.Reserve_WCHARList(10);
+	
+	//buff
+	{
+		buffList[0] = { 241203, 6 };
+		auto victimList0 = pkt_write.ReservevictimList(&buffList[0], 2);
+		{
+			victimList0[0] = 100;
+			victimList0[1] = 101;
+		}
+		
+
+		buffList[1] = { 240528,23 };
+		auto victimList1 = pkt_write.ReservevictimList(&buffList[1], 4);
+		{
+			victimList1[0] = 614;
+			victimList1[1] = 622;
+			victimList1[2] = 1109;
+			victimList1[3] = 1211;
+		}
+	}
+
+	//name
+	{
+		wCharList[0] = L'C';
+		wCharList[1] = L'h';
+		wCharList[2] = L'a';
+		wCharList[3] = L'n';
+		wCharList[4] = L'g';
+		wCharList[5] = L'G';
+		wCharList[6] = L'e';
+		wCharList[7] = L'u';
+		wCharList[8] = L'n';
+		wCharList[9] = L'\0';
+	}
+	
+	G_GameSessionManager->BroadCast(pkt_write.Ready());
 
 	G_GameSessionManager->Add(static_pointer_cast<GameSession>(shared_from_this()));
 }
@@ -37,6 +74,8 @@ int32 GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 	PacketHeader header = *((PacketHeader*)buffer);
 
 	cout << "Paket ID : " << header.id << "  Size : " << header.size << endl;
+
+	ServerPacketHandler::HandlePacket(buffer, len);
 
 	return len;
 }

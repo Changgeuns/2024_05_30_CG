@@ -29,41 +29,43 @@ void ClientPacketHandler::Handle_C_TEST(BYTE* buffer, int32 len)
 {
 	BufferReader br(buffer, len);
 
-	PlayerInfo_Protocol pkt;
-	br >> pkt;
+	PlayerInfo_Packet* pkt = reinterpret_cast<PlayerInfo_Packet*>(buffer);
 
-	if (pkt.IsValid() == false)
+	if (pkt->IsValid() == false)
 		return;
 
-	vector<BuffData> buffDataes;
-	buffDataes.resize(pkt.buffCount);
-	for (int i = 0; i < pkt.buffCount; i++)
+
+
+	PlayerInfo_Packet::BuffList buffDataes = pkt->GetBuffList();
+
+	/*for (int i = 0; i < pkt->buffCount; i++)
 	{
 		br >> buffDataes[i];
-	}
-
-	wstring name;
-	name.resize(pkt.nameCount);
-	for (int i = 0; i < pkt.nameCount; i++)
-	{
-		br >> name[i];
-	}
-
-	wcout.imbue(std::locale("kor"));
-	wcout << name << endl;
+	}*/
 
 	cout << "BuffCount : " << buffDataes.size() << endl;
-	for (auto buff : buffDataes)
+
+	for (auto& buff : buffDataes)
 	{
 		cout << "BuffId : " << buff.buffId << " / BuffRemain : " << buff.remainTime << endl;
+
+		PlayerInfo_Packet::VictimList victims = pkt->GetVictimList(&buff);
+		cout << "victim count : " << buff.victimCount << endl;
+		for (auto& victim : victims)
+		{
+			cout << "Victim : " << victim << endl;
+		}
+
 	}
 
+	PacketList<WCHAR> wCharList = pkt->GetWcharList();
+	cout << wCharList[0] << endl;
 }
 
 void ClientPacketHandler::Handle_C_TEST(BYTE* buffer, int32 len, vector<BuffData> buffs)
 {
 	BufferReader br(buffer, len);
-	int32 t = sizeof(PlayerInfo_Protocol);
+	int32 t = sizeof(PlayerInfo_Packet);
 	PacketHeader header;
 	br >> header;
 
@@ -102,7 +104,7 @@ void ClientPacketHandler::Handle_C_TEST(BYTE* buffer, int32 len, vector<BuffData
 
 }
 
-shared_ptr<SendBuffer> ClientPacketHandler::Make_S_TEST(int64 id, int32 hp, int16 atk, vector<BuffData> buffs)
+shared_ptr<SendBuffer> ClientPacketHandler::Make_C_TEST(int64 id, int32 hp, int16 atk, vector<BuffData> buffs)
 {
 	shared_ptr<SendBuffer> buf = make_shared<SendBuffer>(1000);
 	/*PlayerInfo_Protocol p;
